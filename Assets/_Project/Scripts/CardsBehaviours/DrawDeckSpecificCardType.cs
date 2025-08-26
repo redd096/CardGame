@@ -2,10 +2,13 @@ using UnityEngine;
 
 namespace cg
 {
+    /// <summary>
+    /// Select X cards of the specified type in the deck, and draw them
+    /// </summary>
     [System.Serializable]
-    public class DrawDeckSpecificCardType : BaseCardBehaviour
+    public class DrawDeckSpecificCardType : DrawDeckCards
     {
-        [Min(1)] public int NumberOfCards = 1;
+        [Space]
         public ECardType TypeCardsToDraw;
     }
 }

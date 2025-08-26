@@ -9,6 +9,9 @@ using UnityEditorInternal;
 
 namespace cg
 {
+    /// <summary>
+    /// A card with a list of Behaviour to execute
+    /// </summary>
     [CreateAssetMenu(menuName = "CardGame/Generic Card")]
     public class GenericCard : BaseCard
     {
@@ -92,24 +95,42 @@ namespace cg
             };
 
             // Customize the add button menu
-            reorderableList.onAddDropdownCallback = (Rect buttonRect, ReorderableList list) =>
-            {
-                var menu = new GenericMenu();
-                var types = System.AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(s => s.GetTypes())
-                    .Where(p => p.IsSubclassOf(typeof(BaseCardBehaviour)) && !p.IsAbstract);
+            reorderableList.onAddDropdownCallback = ShowMenu;
+        }
 
-                foreach (var type in types)
+        private void ShowMenu(Rect buttonRect, ReorderableList list)
+        {
+            var menu = new GenericMenu();
+
+            //get every sequence type
+            var sequenceTypes = (ECardBehaviourSequenceType[])System.Enum.GetValues(typeof(ECardBehaviourSequenceType));
+
+            //get every Behaviour class
+            var behaviourTypes = System.AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.IsSubclassOf(typeof(BaseCardBehaviour)) && !p.IsAbstract);
+
+            //create menu with And/Then sequence, and every CardBehaviour selectable
+            foreach (var sequence in sequenceTypes)
+            {
+                foreach (var behaviour in behaviourTypes)
                 {
-                    menu.AddItem(new GUIContent(type.Name), false, () => {
-                        var newBehavior = System.Activator.CreateInstance(type);
+                    string menuPath = $"{sequence}/{behaviour.Name}";
+
+                    //on click, create it and add to the array
+                    menu.AddItem(new GUIContent(menuPath), false, () =>
+                    {
+                        var newBehavior = (BaseCardBehaviour)System.Activator.CreateInstance(behaviour);
+                        newBehavior.SequenceType = sequence;    //set sequence type
+
                         list.serializedProperty.arraySize++;
                         list.serializedProperty.GetArrayElementAtIndex(list.serializedProperty.arraySize - 1).managedReferenceValue = newBehavior;
                         list.serializedProperty.serializedObject.ApplyModifiedProperties();
                     });
                 }
-                menu.ShowAsContext();
-            };
+            }
+
+            menu.ShowAsContext();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

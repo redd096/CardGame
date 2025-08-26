@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775cfd5aa8dc0fb4bb8582986d33b540, type: 3}
+  m_Name: Pesca 2345
+  m_EditorClassIdentifier: Assembly-CSharp::cg.GenericCard
+  CardName: Pesca 2/3/4/5
+  Description: Pesca 2/3/4/5
+  CardType: 3
+  CardSprite: {fileID: 0}
+  CardsBehaviours:
+    Behaviours:
+    - rid: 7926285362946375791
+  references:
+    version: 2
+    RefIds:
+    - rid: 7926285362946375791
+      type: {class: DrawDeckCards, ns: cg, asm: Assembly-CSharp}
+      data:
+        SequenceType: 0
+        NumberOfCards: 2
+        Deck: 0
+        IncreaseWithNumberOfPlayers: 1
+        NumberIncrement: 1
