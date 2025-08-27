@@ -1,5 +1,6 @@
 using redd096.Attributes;
 using UnityEngine;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +16,26 @@ namespace cg
     {
         public BaseCard[] Cards;
         public bool ShuffleOnStartGame;
+
+        /// <summary>
+        /// Be sure there are at least cards to start the game
+        /// </summary>
+        public bool IsCorrect(int startCardsForPlayer, int startLifeCardsForPlayer, int numberOfPlayers, out string error)
+        {
+            if (startCardsForPlayer * numberOfPlayers > Cards.Length)
+            {
+                error = "There aren't enough cards in deck";
+                return false;
+            }
+            if (startLifeCardsForPlayer * numberOfPlayers > Cards.Where(x => x.GetType() == typeof(Life)).Count())
+            {
+                error = "There aren't enough Life cards in deck";
+                return false;
+            }
+
+            error = "";
+            return true;
+        }
 
         #region editor
 #if UNITY_EDITOR

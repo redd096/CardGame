@@ -1,4 +1,5 @@
 using redd096;
+using UnityEngine;
 
 namespace cg
 {
@@ -6,10 +7,37 @@ namespace cg
     {
         public Rules rules;
         public Deck deck;
-        
+        [Min(2)] public int numberOfPlayers = 2;
+
         protected override void InitializeInstance()
         {
             base.InitializeInstance();
+        }
+
+        /// <summary>
+        /// Check if everything is set and correct
+        /// </summary>
+        public bool IsCorrect(out string error)
+        {
+            //check vars are setted
+            if (rules == null)
+            {
+                error = "Missing Rules in CardGameManager";
+                return false;
+            }
+            if (deck == null)
+            {
+                error = "Missing Deck in CardGameManager";
+                return false;
+            }
+
+            //and everything is correct
+            if (rules.IsCorrect(numberOfPlayers, out error) == false)
+                return false;
+            if (deck.IsCorrect(rules.StartCards, rules.StartLife, numberOfPlayers, out error) == false)
+                return false;
+
+            return true;
         }
     }
 }
