@@ -1,5 +1,4 @@
 using redd096.StateMachine;
-using UnityEngine;
 
 namespace cg
 {
@@ -8,5 +7,13 @@ namespace cg
     /// </summary>
     public class CardGameSM : StateMachine<CardGameSM>
     {
+        public CardGameStartState StartState;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            SetState(StartState);
+        }
     }
 }
