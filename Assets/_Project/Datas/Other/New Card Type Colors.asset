@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2141d8bdb7bdb9d54beb5bf178e36ff5, type: 3}
+  m_Name: New Card Type Colors
+  m_EditorClassIdentifier: Assembly-CSharp::cg.CardTypeColors
+  colorCardTypes:
+  - cardType: 0
+    color: {r: 1, g: 0.5031959, b: 0.042452812, a: 1}
+  - cardType: 1
+    color: {r: 0.08235291, g: 0.9137255, b: 0.86862314, a: 1}
+  - cardType: 2
+    color: {r: 0.9150943, g: 0.8824245, b: 0.082013145, a: 1}
+  - cardType: 3
+    color: {r: 1, g: 0.39607844, b: 0.66269046, a: 1}
+  - cardType: 4
+    color: {r: 0.105820596, g: 0.7735849, b: 0.2703734, a: 1}
+  - cardType: 5
+    color: {r: 0.8113208, g: 0.17825261, b: 0.12629052, a: 1}

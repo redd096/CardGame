@@ -740,6 +740,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 252964467}
+  - component: {fileID: 252964468}
   m_Layer: 0
   m_Name: CardGameUIManager
   m_TagString: Untagged
@@ -762,6 +763,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &252964468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252964466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b77cad31dde817a548de570a593c4c59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::cg.CardGameUIManager
+  startLoadingPanel: {fileID: 1792769660193400158}
+  gamePanel: {fileID: 6675333017350746197}
+  playerPrefab: {fileID: 2778934978585289210, guid: a4381ce4cc0a6b494a6b9fa48825181c, type: 3}
+  playersContainer: {fileID: 1306116992}
+  cardPrefab: {fileID: 8680551195877832144, guid: a996c1f69fb7f73ceadcbd40a115ff3b, type: 3}
+  playerCardsContainer: {fileID: 573621110}
+  adversaryCardsContainer: {fileID: 365522884}
+  colorCardTypes: {fileID: 11400000, guid: a9f0f30d1a42095e3bf5fe7819212570, type: 2}
 --- !u!1001 &269609438
 PrefabInstance:
   m_ObjectHideFlags: 0

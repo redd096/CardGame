@@ -11,15 +11,12 @@ namespace cg
     [System.Serializable]
     public class CardGameStartState : IState<CardGameSM>
     {
-        [SerializeField] private GameObject loadingPanel;
         [SerializeField] private GameObject loadingObj;
         [SerializeField] private GameObject errorObj;
         [Space]
         [SerializeField] private TMP_Text loadingLabel;
         [SerializeField] private Button backOnErrorButton;
         [SerializeField] private TMP_Text errorLabel;
-        [Space]
-        [SerializeField] private GameObject gamePanel;
 
         //consts
         public const float LOADING_ANIMATION_DELAY = 0.3f;
@@ -44,10 +41,9 @@ namespace cg
 
             //show loading
             ShowObj(showLoading: true);
-            gamePanel.SetActive(false);
+            CardGameUIManager.instance.ShowPanel(isGamePanel: false);
 
-            //show panel and save default text (with transparent points)
-            loadingPanel.SetActive(true);
+            //and save default text (with transparent points)
             defaultText = loadingLabel.text;
         }
 
@@ -68,7 +64,7 @@ namespace cg
             backOnErrorButton.onClick.RemoveListener(OnClickBackOnError);
 
             //hide panel and reset text
-            loadingPanel.SetActive(false);
+            CardGameUIManager.instance.ShowPanel(isGamePanel: true);
             loadingLabel.text = defaultText;
         }
 
@@ -122,7 +118,6 @@ namespace cg
             if (cardGameManagerInitialized)
             {
                 StateMachine.SetState(StateMachine.DrawStartingCardsState);
-                gamePanel.SetActive(true);
             }
             //else show error
             else

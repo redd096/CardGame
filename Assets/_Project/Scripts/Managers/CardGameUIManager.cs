@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using redd096;
 using UnityEngine;
 
 namespace cg
 {
+    /// <summary>
+    /// Manager for the UI of the CardGame
+    /// </summary>
     public class CardGameUIManager : SimpleInstance<CardGameUIManager>
     {
         [SerializeField] private GameObject startLoadingPanel;
@@ -13,10 +15,10 @@ namespace cg
         [SerializeField] private PlayerUI playerPrefab;
         [SerializeField] private Transform playersContainer;
         [SerializeField] private CardUI cardPrefab;
-        [SerializeField] private Transform playersCardsContainer;
+        [SerializeField] private Transform playerCardsContainer;
         [SerializeField] private Transform adversaryCardsContainer;
         [Space]
-        [SerializeField] private FColorCardType[] colorCardTypes;
+        [SerializeField] private CardTypeColors colorCardTypes;
 
         private Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
         private Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
@@ -25,7 +27,7 @@ namespace cg
         /// <summary>
         /// Show loading or game panel
         /// </summary>
-        public void SetPanel(bool isGamePanel)
+        public void ShowPanel(bool isGamePanel)
         {
             startLoadingPanel.SetActive(isGamePanel == false);
             gamePanel.SetActive(isGamePanel);
@@ -58,7 +60,7 @@ namespace cg
         /// </summary>
         public void SetCards(bool isPlayer, BaseCard[] cards)
         {
-            Transform container = isPlayer ? playersCardsContainer : adversaryCardsContainer;
+            Transform container = isPlayer ? playerCardsContainer : adversaryCardsContainer;
             Dictionary<BaseCard, CardUI> dict = isPlayer ? playerCardsInScene : adversaryCardsInScene;
 
             //destroy previous
@@ -70,20 +72,13 @@ namespace cg
             for (int i = 0; i < cards.Length; i++)
             {
                 BaseCard card = cards[i];
-                Color color = colorCardTypes.FirstOrDefault(x => x.cardType == card.CardType).color;
+                Color color = colorCardTypes.GetColor(card.CardType);
 
                 CardUI cardUI = Instantiate(cardPrefab, container);
                 cardUI.Init(card, color);
 
                 dict.Add(card, cardUI);
             }
-        }
-
-        [System.Serializable]
-        private struct FColorCardType
-        {
-            public ECardType cardType;
-            public Color color;
         }
     }
 }

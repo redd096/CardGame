@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace cg
 {
+    /// <summary>
+    /// Manager for shared Logic of the CardGame
+    /// </summary>
     public class CardGameManager : SimpleInstance<CardGameManager>
     {
         public Rules rules;
