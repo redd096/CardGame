@@ -27,7 +27,8 @@ namespace cg
                 error = "There aren't enough cards in deck";
                 return false;
             }
-            if (startLifeCardsForPlayer * numberOfPlayers > Cards.Where(x => x.GetType() == typeof(Life)).Count())
+            int lifeCount = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Life)) != null).Count();
+            if (startLifeCardsForPlayer * numberOfPlayers > lifeCount)
             {
                 error = "There aren't enough Life cards in deck";
                 return false;
@@ -41,7 +42,33 @@ namespace cg
 #if UNITY_EDITOR
 
         [Space]
-        [SerializeField] FGenerateDeckDebug[] generateDeckCards;
+        [ReadOnly][SerializeField] private int numberOfStealCards;
+        [ReadOnly][SerializeField] private int numberOfDestroyCards;
+        [ReadOnly][SerializeField] private int numberOfDiscardCards;
+        [ReadOnly][SerializeField] private int numberOfNormalCards;
+        [ReadOnly][SerializeField] private int numberOfLifeCards;
+        [ReadOnly][SerializeField] private int numberOfStopCards;
+        [Space]
+        [ReadOnly][SerializeField] private int specificLifeCards;
+        [ReadOnly][SerializeField] private int specificBombCards;
+        [ReadOnly][SerializeField] private int specificSwapHandsCards;
+
+        private void OnValidate()
+        {
+            numberOfStealCards = Cards.Where(x => x.CardType == ECardType.Steal).Count();
+            numberOfDestroyCards = Cards.Where(x => x.CardType == ECardType.Destroy).Count();
+            numberOfDiscardCards = Cards.Where(x => x.CardType == ECardType.Discard).Count();
+            numberOfNormalCards = Cards.Where(x => x.CardType == ECardType.Normal).Count();
+            numberOfLifeCards = Cards.Where(x => x.CardType == ECardType.Life).Count();
+            numberOfStopCards = Cards.Where(x => x.CardType == ECardType.Stop).Count();
+
+            specificLifeCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Life)) != null).Count();
+            specificBombCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Bomb)) != null).Count();
+            specificSwapHandsCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(SwapHands)) != null).Count();
+        }
+
+        [Space]
+        [SerializeField] private FGenerateDeckDebug[] generateDeckCards;
 
         [System.Serializable]
         public struct FGenerateDeckDebug

@@ -68,6 +68,10 @@ namespace cg
                 Destroy(container.GetChild(i).gameObject);
             dict.Clear();
 
+            //be ure there are cards
+            if (cards == null)
+                return;
+
             //and create new ones
             for (int i = 0; i < cards.Length; i++)
             {

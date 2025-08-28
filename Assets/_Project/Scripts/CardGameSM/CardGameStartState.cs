@@ -42,6 +42,7 @@ namespace cg
             //show loading
             ShowObj(showLoading: true);
             CardGameUIManager.instance.ShowPanel(isGamePanel: false);
+            SetGameScene();
 
             //and save default text (with transparent points)
             defaultText = loadingLabel.text;
@@ -66,6 +67,29 @@ namespace cg
             //hide panel and reset text
             CardGameUIManager.instance.ShowPanel(isGamePanel: true);
             loadingLabel.text = defaultText;
+        }
+
+        private void OnClickBackOnError()
+        {
+            //exit and re-enter in this state
+            StateMachine.SetState(StateMachine.StartState);
+        }
+
+        #region private API
+
+        private void ShowObj(bool showLoading)
+        {
+            //show LoadingObj or ErrorObj
+            loadingObj.SetActive(showLoading);
+            errorObj.SetActive(showLoading == false);
+        }
+
+        private void SetGameScene()
+        {
+            //create players and reset cards
+            CardGameUIManager.instance.CreatePlayers(CardGameManager.instance.numberOfPlayers);
+            CardGameUIManager.instance.SetCards(true, null);
+            CardGameUIManager.instance.SetCards(false, null);
         }
 
         private void DoAnimation()
@@ -93,22 +117,6 @@ namespace cg
             }
         }
 
-        private void OnClickBackOnError()
-        {
-            //exit and re-enter in this state
-            StateMachine.SetState(StateMachine.StartState);
-        }
-
-        /// <summary>
-        /// Show LoadingObj or ErrorObj
-        /// </summary>
-        /// <param name="showLoading"></param>
-        private void ShowObj(bool showLoading)
-        {
-            loadingObj.SetActive(showLoading);
-            errorObj.SetActive(showLoading == false);
-        }
-
         private void OnCompleteMinimumTime()
         {
             string error = "CardGameManager isn't in scene!";
@@ -126,5 +134,7 @@ namespace cg
                 ShowObj(showLoading: false);
             }
         }
+
+        #endregion
     }
 }
