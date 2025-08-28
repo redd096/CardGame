@@ -15,7 +15,8 @@ MonoBehaviour:
   CardName: (Bomba)
   Description: (Bomba)
   CardType: 2
-  CardsBehaviours:
+  CardSprite: {fileID: 0}
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362782535747
   references:

@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 3, poi ruba 2 (a uno solo )
   CardType: 0
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375750
     - rid: 7926285362946375751

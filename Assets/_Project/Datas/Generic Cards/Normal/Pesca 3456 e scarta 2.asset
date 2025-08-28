@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Pesca 3/4/5/6 e scarta 2
   CardType: 3
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375792
     - rid: 7926285362946375793

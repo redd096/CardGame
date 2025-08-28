@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 2, poi ruba 1 e distruggi 1 agli altri
   CardType: 0
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375747
     - rid: 7926285362946375748

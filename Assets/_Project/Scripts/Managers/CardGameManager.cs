@@ -9,12 +9,17 @@ namespace cg
     public class CardGameManager : SimpleInstance<CardGameManager>
     {
         public Rules rules;
-        public Deck deck;
+        [SerializeField] private Deck deck;
         [Min(2)] public int numberOfPlayers = 2;
+
+        public Deck Deck { get; set; }
 
         protected override void InitializeInstance()
         {
             base.InitializeInstance();
+
+            //generate clone for runtime
+            Deck = deck.GenerateCloneForRuntime();
         }
 
         /// <summary>

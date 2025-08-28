@@ -18,7 +18,21 @@ namespace cg
         /// <summary>
         /// Is necessary to do CardsBehaviours.Behaviours just to simplify custom editor
         /// </summary>
-        public GenericCard_CardsBehaviours CardsBehaviours;
+        [SerializeField] GenericCard_CardsBehaviours cardsBehaviour;
+
+        public List<BaseCardBehaviour> CardsBehaviours => cardsBehaviour.Behaviours;
+
+        /// <summary>
+        /// Check if it has a specific behaviour
+        /// </summary>
+        /// <param name="type">Behaviour type</param>
+        /// <returns></returns>
+        public bool HasBehaviour(System.Type type)
+        {
+            if (CardsBehaviours != null && CardsBehaviours.Count > 0)
+                return CardsBehaviours.Find(y => y.GetType() == typeof(Life)) != null;
+            return false;
+        }
     }
 
     /// <summary>

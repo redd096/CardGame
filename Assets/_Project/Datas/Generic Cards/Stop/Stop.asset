@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Stop
   CardType: 5
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375799
   references:

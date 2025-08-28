@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 2/3/4/5 e pesca 1 a scelta dal mazzo
   CardType: 2
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375766
     - rid: 7926285362946375768

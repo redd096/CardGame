@@ -15,7 +15,8 @@ MonoBehaviour:
   CardName: Guarda 2 e ruba 1, agli altri distruggi 1
   Description: Guarda 2 e ruba 1, agli altri distruggi 1
   CardType: 0
-  CardsBehaviours:
+  CardSprite: {fileID: 0}
+  cardsBehaviour:
     Behaviours:
     - rid: 7174305160373731403
     - rid: 7174305160373731404

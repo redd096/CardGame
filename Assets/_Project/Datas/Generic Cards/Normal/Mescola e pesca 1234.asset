@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Mescola e pesca 1/2/3/4
   CardType: 3
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375789
     - rid: 7926285362946375790

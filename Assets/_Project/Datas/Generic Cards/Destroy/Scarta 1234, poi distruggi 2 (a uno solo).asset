@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 1/2/3/4, poi distruggi 2 (a uno solo)
   CardType: 1
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375760
     - rid: 7926285362946375761

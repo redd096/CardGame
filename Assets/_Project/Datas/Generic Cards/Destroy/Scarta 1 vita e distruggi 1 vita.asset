@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 1 vita e distruggi 1 vita
   CardType: 1
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375762
     - rid: 7926285362946375765
@@ -28,14 +28,14 @@ MonoBehaviour:
       data:
         SequenceType: 0
         NumberOfCards: 1
-        TypeCardsToDiscard: 4
         TargetCard: 0
         IncreaseWithNumberOfPlayers: 0
         NumberIncrement: 1
+        TypeCardsToDiscard: 4
     - rid: 7926285362946375765
       type: {class: DestroyPlayerSpecificCardType, ns: cg, asm: Assembly-CSharp}
       data:
         SequenceType: 1
         NumberOfCards: 1
-        TypeCardsToDestroy: 4
         TargetCard: 1
+        TypeCardsToDestroy: 4

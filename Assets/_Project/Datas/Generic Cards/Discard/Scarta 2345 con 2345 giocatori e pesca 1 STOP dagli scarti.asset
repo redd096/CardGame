@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 2/3/4/5 con 2/3/4/5 giocatori e pesca 1 STOP dagli scarti
   CardType: 2
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362782535745
     - rid: 7926285362946375752

@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Vita extra
   CardType: 4
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375798
   references:

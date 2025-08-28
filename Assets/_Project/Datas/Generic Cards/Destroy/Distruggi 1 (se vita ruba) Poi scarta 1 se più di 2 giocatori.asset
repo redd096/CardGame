@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "Distruggi 1 (se vita ruba) Poi scarta 1 se pi\xF9 di 2 giocatori"
   CardType: 1
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375779
     - rid: 7926285362946375781

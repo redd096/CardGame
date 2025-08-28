@@ -128,6 +128,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 59e0600bb11f3565d829a0f7e1125759, type: 2}
   - {fileID: 11400000, guid: 59e0600bb11f3565d829a0f7e1125759, type: 2}
   ShuffleOnStartGame: 1
+  numberOfStealCards: 0
+  numberOfDestroyCards: 0
+  numberOfDiscardCards: 0
+  numberOfNormalCards: 0
+  numberOfLifeCards: 0
+  numberOfStopCards: 0
+  specificLifeCards: 0
+  specificBombCards: 0
+  specificSwapHandsCards: 0
   generateDeckCards:
   - Card: {fileID: 11400000, guid: 59504feaabef8984fb6118391c8af8cf, type: 2}
     Quantity: 4
@@ -176,8 +185,8 @@ MonoBehaviour:
   - Card: {fileID: 11400000, guid: 4167a97c7e4741711ba08b0870b374eb, type: 2}
     Quantity: 1
   - Card: {fileID: 11400000, guid: dcd010c729cfce4198b3f87fcb6c84f1, type: 2}
-    Quantity: 12
+    Quantity: 6
   - Card: {fileID: 11400000, guid: 5be9a98fa47a468f59496ea44282716c, type: 2}
-    Quantity: 2
+    Quantity: 1
   - Card: {fileID: 11400000, guid: 59e0600bb11f3565d829a0f7e1125759, type: 2}
     Quantity: 12

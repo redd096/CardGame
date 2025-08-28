@@ -15,7 +15,8 @@ MonoBehaviour:
   CardName: Ruba 1 e distruggi 1 agli altri
   Description: Ruba 1 e distruggi 1 agli altri
   CardType: 0
-  CardsBehaviours:
+  CardSprite: {fileID: 0}
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362782535746
     - rid: 7926285362782535748

@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Pesca 2/3/4/5
   CardType: 3
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375791
   references:

@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Ruba 1, poi regala 1
   CardType: 0
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375680
     - rid: 7926285362946375681

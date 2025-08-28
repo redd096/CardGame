@@ -15,7 +15,8 @@ MonoBehaviour:
   CardName: Tutti scartano 1, poi ruba 1 carta(ad 1 solo)
   Description: Tutti scartano 1, poi ruba 1 carta(ad 1 solo)
   CardType: 0
-  CardsBehaviours:
+  CardSprite: {fileID: 0}
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375753
     - rid: 7926285362946375754

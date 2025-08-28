@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Scarta 4, poi distruggi 1 vita (a uno solo)
   CardType: 1
   CardSprite: {fileID: 0}
-  CardsBehaviours:
+  cardsBehaviour:
     Behaviours:
     - rid: 7926285362946375784
     - rid: 7926285362946375785

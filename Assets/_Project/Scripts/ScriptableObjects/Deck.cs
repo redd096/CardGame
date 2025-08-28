@@ -27,7 +27,7 @@ namespace cg
                 error = "There aren't enough cards in deck";
                 return false;
             }
-            int lifeCount = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Life)) != null).Count();
+            int lifeCount = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
             if (startLifeCardsForPlayer * numberOfPlayers > lifeCount)
             {
                 error = "There aren't enough Life cards in deck";
@@ -36,6 +36,19 @@ namespace cg
 
             error = "";
             return true;
+        }
+
+        /// <summary>
+        /// Generate a copy of the Deck and of every Card, to avoid edit scriptable objects at runtime
+        /// </summary>
+        public Deck GenerateCloneForRuntime()
+        {
+            Deck clone = Instantiate(this);
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                clone.Cards[i] = Instantiate(Cards[i]);
+            }
+            return clone;
         }
 
         #region editor
@@ -55,16 +68,19 @@ namespace cg
 
         private void OnValidate()
         {
-            numberOfStealCards = Cards.Where(x => x.CardType == ECardType.Steal).Count();
-            numberOfDestroyCards = Cards.Where(x => x.CardType == ECardType.Destroy).Count();
-            numberOfDiscardCards = Cards.Where(x => x.CardType == ECardType.Discard).Count();
-            numberOfNormalCards = Cards.Where(x => x.CardType == ECardType.Normal).Count();
-            numberOfLifeCards = Cards.Where(x => x.CardType == ECardType.Life).Count();
-            numberOfStopCards = Cards.Where(x => x.CardType == ECardType.Stop).Count();
+            if (Cards != null && Cards.Length > 0)
+            {
+                numberOfStealCards = Cards.Where(x => x.CardType == ECardType.Steal).Count();
+                numberOfDestroyCards = Cards.Where(x => x.CardType == ECardType.Destroy).Count();
+                numberOfDiscardCards = Cards.Where(x => x.CardType == ECardType.Discard).Count();
+                numberOfNormalCards = Cards.Where(x => x.CardType == ECardType.Normal).Count();
+                numberOfLifeCards = Cards.Where(x => x.CardType == ECardType.Life).Count();
+                numberOfStopCards = Cards.Where(x => x.CardType == ECardType.Stop).Count();
 
-            specificLifeCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Life)) != null).Count();
-            specificBombCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(Bomb)) != null).Count();
-            specificSwapHandsCards = Cards.Where(x => x is GenericCard genericCard && genericCard.CardsBehaviours.Behaviours.Find(y => y.GetType() == typeof(SwapHands)) != null).Count();
+                specificLifeCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
+                specificBombCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Bomb))).Count();
+                specificSwapHandsCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(SwapHands))).Count();
+            }
         }
 
         [Space]

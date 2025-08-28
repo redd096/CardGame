@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2141d8bdb7bdb9d54beb5bf178e36ff5, type: 3}
-  m_Name: New Card Type Colors
+  m_Name: Card Type Colors
   m_EditorClassIdentifier: Assembly-CSharp::cg.CardTypeColors
   colorCardTypes:
   - cardType: 0
