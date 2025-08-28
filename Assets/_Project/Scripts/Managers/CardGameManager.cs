@@ -38,11 +38,16 @@ namespace cg
                 error = "Missing Deck in CardGameManager";
                 return false;
             }
+            if (Deck == null)
+            {
+                error = "Deck still isn't cloned for runtime, wait few seconds";
+                return false;
+            }
 
             //and everything is correct
             if (rules.IsCorrect(numberOfPlayers, out error) == false)
                 return false;
-            if (deck.IsCorrect(rules.StartCards, rules.StartLife, numberOfPlayers, out error) == false)
+            if (Deck.IsCorrect(rules.StartCards, rules.StartLife, numberOfPlayers, out error) == false)
                 return false;
 
             return true;
