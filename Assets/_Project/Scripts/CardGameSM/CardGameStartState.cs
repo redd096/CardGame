@@ -1,4 +1,5 @@
 using redd096.StateMachine;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,8 @@ namespace cg
         private float animationTimer;
         private float minTimer;
 
+        private Coroutine coroutine;
+
         public void Enter()
         {
             //reset vars
@@ -42,21 +45,19 @@ namespace cg
             //show loading
             ShowObj(showLoading: true);
             CardGameUIManager.instance.ShowPanel(isGamePanel: false);
-            SetGameScene();
 
             //and save default text (with transparent points)
             defaultText = loadingLabel.text;
+
+            //start coroutine
+            if (coroutine != null)
+                StateMachine.StopCoroutine(coroutine);
+            coroutine = StateMachine.StartCoroutine(CompleteMinimumTimeCoroutine());
         }
 
         public void UpdateState()
         {
             DoAnimation();
-
-            //wait minimum time, then continue to call function
-            if (Time.time > minTimer)
-            {
-                OnCompleteMinimumTime();
-            }
         }
 
         public void Exit()
@@ -67,6 +68,10 @@ namespace cg
             //hide panel and reset text
             CardGameUIManager.instance.ShowPanel(isGamePanel: true);
             loadingLabel.text = defaultText;
+
+            //stop coroutine
+            if (coroutine != null)
+                StateMachine.StopCoroutine(coroutine);
         }
 
         private void OnClickBackOnError()
@@ -82,14 +87,6 @@ namespace cg
             //show LoadingObj or ErrorObj
             loadingObj.SetActive(showLoading);
             errorObj.SetActive(showLoading == false);
-        }
-
-        private void SetGameScene()
-        {
-            //create players and reset cards
-            CardGameUIManager.instance.CreatePlayers(CardGameManager.instance.numberOfPlayers);
-            CardGameUIManager.instance.SetCards(true, null);
-            CardGameUIManager.instance.SetCards(false, null);
         }
 
         private void DoAnimation()
@@ -117,8 +114,11 @@ namespace cg
             }
         }
 
-        private void OnCompleteMinimumTime()
+        private IEnumerator CompleteMinimumTimeCoroutine()
         {
+            //wait minimum time
+            yield return new WaitUntil(() => Time.time > minTimer);            
+
             string error = "CardGameManager isn't in scene!";
             bool cardGameManagerInitialized = CardGameManager.instance && CardGameManager.instance.IsCorrect(out error);
 

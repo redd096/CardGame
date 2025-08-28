@@ -4140,9 +4140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2107cbf9763a7d9c095cbc8e18e4af0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardGameManager
-  rules: {fileID: 11400000, guid: 81e6a27ad2b5e63afa47ef6bc35b10a7, type: 2}
-  deck: {fileID: 11400000, guid: ecfb5b68763efdf1abf2577531f7ce33, type: 2}
-  numberOfPlayers: 2
+  Rules: {fileID: 11400000, guid: 81e6a27ad2b5e63afa47ef6bc35b10a7, type: 2}
+  deckEditor: {fileID: 11400000, guid: ecfb5b68763efdf1abf2577531f7ce33, type: 2}
+  NumberOfPlayers: 2
 --- !u!1 &1770806490
 GameObject:
   m_ObjectHideFlags: 0

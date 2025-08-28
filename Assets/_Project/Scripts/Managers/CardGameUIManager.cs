@@ -24,6 +24,16 @@ namespace cg
         private Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
         private Dictionary<BaseCard, CardUI> adversaryCardsInScene = new Dictionary<BaseCard, CardUI>();
 
+        protected override void InitializeInstance()
+        {
+            base.InitializeInstance();
+
+            //reset ui
+            CreatePlayers(CardGameManager.instance.NumberOfPlayers);
+            SetCards(true, null);
+            SetCards(false, null);
+        }
+
         /// <summary>
         /// Show loading or game panel
         /// </summary>

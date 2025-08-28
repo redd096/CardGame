@@ -1,6 +1,7 @@
 using redd096.Attributes;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,7 +15,7 @@ namespace cg
     [CreateAssetMenu(menuName = "CardGame/Deck")]
     public class Deck : ScriptableObject
     {
-        public BaseCard[] Cards;
+        public List<BaseCard> Cards = new List<BaseCard>();
         public bool ShuffleOnStartGame;
 
         /// <summary>
@@ -22,12 +23,12 @@ namespace cg
         /// </summary>
         public bool IsCorrect(int startCardsForPlayer, int startLifeCardsForPlayer, int numberOfPlayers, out string error)
         {
-            if (startCardsForPlayer * numberOfPlayers > Cards.Length)
+            if (startCardsForPlayer * numberOfPlayers > Cards.Count)
             {
                 error = "There aren't enough cards in deck";
                 return false;
             }
-            int lifeCount = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
+            int lifeCount = Cards.FindAll(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
             if (startLifeCardsForPlayer * numberOfPlayers > lifeCount)
             {
                 error = "There aren't enough Life cards in deck";
@@ -44,11 +45,50 @@ namespace cg
         public Deck GenerateCloneForRuntime()
         {
             Deck clone = Instantiate(this);
-            for (int i = 0; i < Cards.Length; i++)
+            for (int i = 0; i < Cards.Count; i++)
             {
                 clone.Cards[i] = Instantiate(Cards[i]);
             }
             return clone;
+        }
+
+        /// <summary>
+        /// Shuffle cards inside the deck
+        /// </summary>
+        public void ShuffleDeck()
+        {
+            // Use a simple and effective Fisher-Yates shuffle algorithm
+            for (int i = Cards.Count - 1; i > 0; i--)
+            {
+                int randomIndex = Random.Range(0, i + 1);
+                BaseCard temp = Cards[i];
+                Cards[i] = Cards[randomIndex];
+                Cards[randomIndex] = temp;
+            }
+        }
+
+        /// <summary>
+        /// Draw next card in the deck
+        /// </summary>
+        /// <returns></returns>
+        public BaseCard DrawNextCard()
+        {
+            BaseCard card = Cards[0];
+            Cards.RemoveAt(0);
+            return card;
+        }
+
+        /// <summary>
+        /// Find a card with specific behaviour and draw it from the deck
+        /// </summary>
+        /// <param name="behaviour"></param>
+        /// <returns></returns>
+        public BaseCard DrawCardWithSpecificBehaviour(System.Type behaviour)
+        {
+            int index = Cards.FindIndex(x => x is GenericCard genericCard && genericCard.HasBehaviour(behaviour));
+            BaseCard card = Cards[index];
+            Cards.RemoveAt(index);
+            return card;
         }
 
         #region editor
@@ -68,18 +108,18 @@ namespace cg
 
         private void OnValidate()
         {
-            if (Cards != null && Cards.Length > 0)
+            if (Cards != null && Cards.Count > 0)
             {
-                numberOfStealCards = Cards.Where(x => x.CardType == ECardType.Steal).Count();
-                numberOfDestroyCards = Cards.Where(x => x.CardType == ECardType.Destroy).Count();
-                numberOfDiscardCards = Cards.Where(x => x.CardType == ECardType.Discard).Count();
-                numberOfNormalCards = Cards.Where(x => x.CardType == ECardType.Normal).Count();
-                numberOfLifeCards = Cards.Where(x => x.CardType == ECardType.Life).Count();
-                numberOfStopCards = Cards.Where(x => x.CardType == ECardType.Stop).Count();
+                numberOfStealCards = Cards.FindAll(x => x.CardType == ECardType.Steal).Count();
+                numberOfDestroyCards = Cards.FindAll(x => x.CardType == ECardType.Destroy).Count();
+                numberOfDiscardCards = Cards.FindAll(x => x.CardType == ECardType.Discard).Count();
+                numberOfNormalCards = Cards.FindAll(x => x.CardType == ECardType.Normal).Count();
+                numberOfLifeCards = Cards.FindAll(x => x.CardType == ECardType.Life).Count();
+                numberOfStopCards = Cards.FindAll(x => x.CardType == ECardType.Stop).Count();
 
-                specificLifeCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
-                specificBombCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Bomb))).Count();
-                specificSwapHandsCards = Cards.Where(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(SwapHands))).Count();
+                specificLifeCards = Cards.FindAll(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))).Count();
+                specificBombCards = Cards.FindAll(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Bomb))).Count();
+                specificSwapHandsCards = Cards.FindAll(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(SwapHands))).Count();
             }
         }
 
@@ -93,14 +133,15 @@ namespace cg
             public int Quantity;
         }
 
-        [Button]
-        void GenerateDeck()
+        [Button("Generate Deck")]
+        void GenerateDeckEditor()
         {
-            int length = 0;
-            foreach (var v in generateDeckCards)
-                length += v.Quantity;
+            //int length = 0;
+            //foreach (var v in generateDeckCards)
+            //    length += v.Quantity;
 
-            Cards = new BaseCard[length];
+            //Cards = new BaseCard[length];
+            Cards = new List<BaseCard>();
             int counter = 0;
             //foreach card
             foreach (var v in generateDeckCards)
@@ -114,17 +155,11 @@ namespace cg
             }
         }
 
-        [Button]
-        void ShuffleDeck()
+        [Button("Shuffle Deck")]
+        void ShuffleDeckEditor()
         {
-            // Use a simple and effective Fisher-Yates shuffle algorithm
-            for (int i = Cards.Length - 1; i > 0; i--)
-            {
-                int randomIndex = Random.Range(0, i + 1);
-                BaseCard temp = Cards[i];
-                Cards[i] = Cards[randomIndex];
-                Cards[randomIndex] = temp;
-            }
+            //shuffle
+            ShuffleDeck();
 
             // Mark the object as dirty so Unity saves the changes
             EditorUtility.SetDirty(this);
