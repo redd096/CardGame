@@ -8,7 +8,7 @@ namespace cg
     /// Every player draw initial cards, then start first player turn
     /// </summary>
     [System.Serializable]
-    public class CardGameDrawStartingCards : IState<CardGameSM>
+    public class CardGameDrawStartingCardsState : IState<CardGameSM>
     {
         public CardGameSM StateMachine { get; set; }
 

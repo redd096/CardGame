@@ -17,6 +17,7 @@ namespace cg
         [SerializeField] private CardUI cardPrefab;
         [SerializeField] private Transform playerCardsContainer;
         [SerializeField] private Transform adversaryCardsContainer;
+        [SerializeField] private GameObject adversaryCardsObj;
         [Space]
         [SerializeField] private CardTypeColors colorCardTypes;
 
@@ -32,6 +33,7 @@ namespace cg
             CreatePlayers(CardGameManager.instance.NumberOfPlayers);
             SetCards(true, null);
             SetCards(false, null);
+            ShowAdversaryCards(false);
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace cg
         /// <summary>
         /// Set cards in UI for player or adversary
         /// </summary>
-        public void SetCards(bool isPlayer, BaseCard[] cards)
+        public Dictionary<BaseCard, CardUI> SetCards(bool isPlayer, BaseCard[] cards)
         {
             Transform container = isPlayer ? playerCardsContainer : adversaryCardsContainer;
             Dictionary<BaseCard, CardUI> dict = isPlayer ? playerCardsInScene : adversaryCardsInScene;
@@ -78,9 +80,9 @@ namespace cg
                 Destroy(container.GetChild(i).gameObject);
             dict.Clear();
 
-            //be ure there are cards
+            //be sure there are cards
             if (cards == null)
-                return;
+                return dict;
 
             //and create new ones
             for (int i = 0; i < cards.Length; i++)
@@ -93,6 +95,16 @@ namespace cg
 
                 dict.Add(card, cardUI);
             }
+
+            return dict;
+        }
+
+        /// <summary>
+        /// Show or hide adversary cards
+        /// </summary>
+        public void ShowAdversaryCards(bool show)
+        {
+            adversaryCardsObj.SetActive(show);
         }
     }
 }

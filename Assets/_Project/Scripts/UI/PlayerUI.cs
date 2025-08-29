@@ -10,15 +10,15 @@ namespace cg
     public class PlayerUI : MonoBehaviour
     {
         //show active obj (with selection and so on...), or deactive obj (dark background)
-        [SerializeField] GameObject activeObj;
-        [SerializeField] GameObject deactiveObj;
-        [SerializeField] TMP_Text[] playerNameLabels;
+        [SerializeField] private GameObject activeObj;
+        [SerializeField] private GameObject deactiveObj;
+        [SerializeField] private Button selectButton;
+        [SerializeField] private TMP_Text[] playerNameLabels;
 
         [Header("Active")]
         //when active show if this is its turn or its selected from another player
-        [SerializeField] Button selectButton;
-        [SerializeField] GameObject playerTurnObj;
-        [SerializeField] GameObject selectedObj;
+        [SerializeField] private GameObject playerTurnObj;
+        [SerializeField] private GameObject selectedObj;
 
         public System.Action<PlayerUI, int> onClickSelect;
         private int playerIndex;

@@ -13,8 +13,25 @@ namespace cg
         [SerializeField] private TMP_Text cardNameLabel;
         [SerializeField] private TMP_Text cardDescriptionLabel;
         [SerializeField] private Image colorTypeImage;
+        [SerializeField] private Button selectButton;
 
+        public System.Action<CardUI, BaseCard> onClickSelect;
         private BaseCard card;
+
+        void Awake()
+        {
+            selectButton.onClick.AddListener(OnClickSelect);
+        }
+
+        void OnDestroy()
+        {
+            selectButton.onClick.RemoveListener(OnClickSelect);
+        }
+
+        private void OnClickSelect()
+        {
+            onClickSelect?.Invoke(this, card);
+        }
 
         /// <summary>
         /// Set graphic values

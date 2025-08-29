@@ -8,7 +8,8 @@ namespace cg
     public class CardGameSM : StateMachine<CardGameSM>
     {
         public CardGameStartState StartState;
-        public CardGameDrawStartingCards DrawStartingCardsState;
+        public CardGameDrawStartingCardsState DrawStartingCardsState;
+        public CardGamePlayerTurnState PlayerTurnState;
 
         protected override void Awake()
         {

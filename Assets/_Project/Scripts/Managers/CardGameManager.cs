@@ -18,6 +18,7 @@ namespace cg
         public List<PlayerLogic> Players { get; set; }
 
         private bool isInitialized;
+        public int currentPlayer { get; private set; }
 
         protected override void InitializeInstance()
         {
@@ -26,7 +27,8 @@ namespace cg
             //generate cards clone for runtime, and generate players
             Deck = deckEditor.GenerateCloneForRuntime();
             Players = new List<PlayerLogic>();
-            for (int i = 0; i < NumberOfPlayers; i++) Players.Add(new PlayerLogic());
+            for (int i = 0; i < NumberOfPlayers; i++)
+                Players.Add(new PlayerLogic());
 
             isInitialized = true;
         }
@@ -81,6 +83,23 @@ namespace cg
         {
             BaseCard card = Deck.DrawCardWithSpecificBehaviour(behaviour);
             Players[playerIndex].Cards.Add(card);
+        }
+
+        /// <summary>
+        /// Start turn for next player
+        /// </summary>
+        public int StartNextTurn()
+        {
+            currentPlayer++;
+            return currentPlayer;
+        }
+
+        /// <summary>
+        /// Get player playing in this turn
+        /// </summary>
+        public PlayerLogic GetCurrentPlayer()
+        {
+            return Players[currentPlayer];
         }
     }
 }
