@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 namespace cg
 {
@@ -8,5 +9,56 @@ namespace cg
     public abstract class BaseCardBehaviour
     {
         public ECardBehaviourSequenceType SequenceType;
+
+        public abstract void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
+        public abstract void AdversaryExecute();
+        public abstract EGenericTarget GetGenericTargetCard();
+
+        /// <summary>
+        /// Does this behaviour have to be merged with previous behaviour? 
+        /// (e.g. GiveCardsToPlayer is merged -> Steal 1 card and Give 1 card, then the same to another player, and so on...)
+        /// </summary>
+        public bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            //get previous behaviour
+            BaseCardBehaviour otherBehaviour = null;
+            int index = behaviourIndex - 1;
+            if (index >= 0 && cardBehaviours.Count > index)
+                otherBehaviour = cardBehaviours[index];
+
+            return MergeWithPreviousBehaviour(cardBehaviours, behaviourIndex, otherBehaviour);
+        }
+        /// <summary>
+        /// Does this behaviour have to be merged with previous behaviour? 
+        /// (e.g. GiveCardsToPlayer is merged -> Steal 1 card and Give 1 card, then the same to another player, and so on...)
+        /// </summary>
+        protected virtual bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour previousBehaviour)
+        {
+            return false;
+        }
+
+        
+        /// <summary>
+        /// Does this behaviour have to be merged with next behaviour? 
+        /// (e.g. LookPlayerCards is merged -> Look 2 cards and Steal 1 card, then the same to another player, and so on...)
+        /// </summary>
+        public bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            //get next behaviour
+            BaseCardBehaviour otherBehaviour = null;
+            int index = behaviourIndex + 1;
+            if (index >= 0 && cardBehaviours.Count > index)
+                otherBehaviour = cardBehaviours[index];
+
+            return MergeWithNextBehaviour(cardBehaviours, behaviourIndex, otherBehaviour);
+        }
+        /// <summary>
+        /// Does this behaviour have to be merged with next behaviour? 
+        /// (e.g. LookPlayerCards is merged -> Look 2 cards and Steal 1 card, then the same to another player, and so on...)
+        /// </summary>
+        protected virtual bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour nextBehaviour)
+        {
+            return false;
+        }
     }
 }

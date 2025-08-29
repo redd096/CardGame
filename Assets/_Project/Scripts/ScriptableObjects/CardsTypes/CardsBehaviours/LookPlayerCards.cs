@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using redd096.Attributes;
 using UnityEngine;
 
@@ -11,9 +12,32 @@ namespace cg
     {
         [Space]
         [Min(1)] public int NumberOfCards = 1;
-        [InfoBox("If this behaviour has TargetCard EveryOtherPlayer or EveryOtherPlayerExceptPreviouslyChoosedOne, "
-            + "and NEXT behaviour too, they are mixed "
+        [InfoBox("If this behaviour has the same Target as NEXT behaviour, they are mixed.\n"
             + "(e.g. Look 2 cards and Steal 1 card, then the same to another player, and so on...)")]
         public ETargetCard TargetCard;
+
+        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+        }
+
+        public override void AdversaryExecute()
+        {
+        }
+
+        public override EGenericTarget GetGenericTargetCard()
+        {
+            return TargetCard.AsGenericTarget();
+        }
+
+        protected override bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour nextBehaviour)
+        {
+            //check targets
+            EGenericTarget target = GetGenericTargetCard();
+            EGenericTarget nextTarget = nextBehaviour != null ? nextBehaviour.GetGenericTargetCard() : EGenericTarget.None;
+            if ((target == EGenericTarget.EveryOtherPlayer || target == EGenericTarget.EveryOtherPlayerExceptPreviouslyChoosedOne) && target == nextTarget)
+                return true;
+
+            return base.MergeWithNextBehaviour(cardBehaviours, behaviourIndex, nextBehaviour);
+        }
     }
 }

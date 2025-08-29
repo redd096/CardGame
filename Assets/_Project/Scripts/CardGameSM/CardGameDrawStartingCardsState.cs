@@ -21,6 +21,9 @@ namespace cg
             if (coroutine != null)
                 StateMachine.StopCoroutine(coroutine);
             coroutine = StateMachine.StartCoroutine(GiveCardsCoroutine());
+
+            //update infos
+            CardGameUIManager.instance.UpdateInfoLabel("Drawing start cards...");
         }
 
         public void UpdateState()
@@ -29,6 +32,8 @@ namespace cg
 
         public void Exit()
         {
+            //update infos
+            CardGameUIManager.instance.UpdateInfoLabel("");
         }
 
         private IEnumerator GiveCardsCoroutine()
@@ -59,9 +64,12 @@ namespace cg
                         CardGameManager.instance.DrawNextCard(playerIndex);
 
                     //update ui
-                    CardGameUIManager.instance.SetCards(isPlayer, CardGameManager.instance.Players[playerIndex].Cards.ToArray());
+                    CardGameUIManager.instance.SetCards(isPlayer, CardGameManager.instance.Players[playerIndex].CardsInHands.ToArray());
                 }
             }
+
+            //change state
+            StateMachine.SetState(StateMachine.DrawTurnCardsState);
         }
     }
 }

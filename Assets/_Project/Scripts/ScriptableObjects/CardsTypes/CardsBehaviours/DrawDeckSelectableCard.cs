@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 namespace cg
 {
     /// <summary>
@@ -7,5 +9,14 @@ namespace cg
     [System.Serializable]
     public class DrawDeckSelectableCard : DrawDeckCards
     {
+        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            base.PlayerExecute(cardBehaviours, behaviourIndex);
+        }
+
+        public override void AdversaryExecute()
+        {
+            base.AdversaryExecute();
+        }
     }
 }

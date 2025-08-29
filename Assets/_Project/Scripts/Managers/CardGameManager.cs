@@ -71,7 +71,7 @@ namespace cg
         public void DrawNextCard(int playerIndex)
         {
             BaseCard card = Deck.DrawNextCard();
-            Players[playerIndex].Cards.Add(card);
+            Players[playerIndex].CardsInHands.Add(card);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace cg
         public void DrawCardWithSpecificBehaviour(int playerIndex, System.Type behaviour)
         {
             BaseCard card = Deck.DrawCardWithSpecificBehaviour(behaviour);
-            Players[playerIndex].Cards.Add(card);
+            Players[playerIndex].CardsInHands.Add(card);
         }
 
         /// <summary>

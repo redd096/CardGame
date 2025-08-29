@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 namespace cg
 {
@@ -7,5 +8,14 @@ namespace cg
     [System.Serializable]
     public class ExtraLife : Life
     {
+        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            base.PlayerExecute(cardBehaviours, behaviourIndex);
+        }
+
+        public override void AdversaryExecute()
+        {
+            base.AdversaryExecute();
+        }
     }
 }

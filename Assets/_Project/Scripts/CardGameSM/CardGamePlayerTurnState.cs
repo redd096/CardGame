@@ -3,6 +3,10 @@ using redd096.StateMachine;
 
 namespace cg
 {
+    /// <summary>
+    /// Player play its cards
+    /// </summary>
+    [System.Serializable]
     public class CardGamePlayerTurnState : IState<CardGameSM>
     {
         public CardGameSM StateMachine { get; set; }
@@ -13,7 +17,7 @@ namespace cg
         {
             //set player cards in ui
             PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
-            List<BaseCard> playerCards = currentPlayer.Cards;
+            List<BaseCard> playerCards = currentPlayer.CardsInHands;
             uiCards = CardGameUIManager.instance.SetCards(isPlayer: true, playerCards.ToArray());
 
             //and register to cards events
@@ -21,6 +25,9 @@ namespace cg
             {
                 keypair.Value.onClickSelect += OnClickCard;
             }
+
+            //update infos
+            CardGameUIManager.instance.UpdateInfoLabel($"Select card to play");
         }
 
         public void UpdateState()
@@ -34,6 +41,12 @@ namespace cg
             {
                 keypair.Value.onClickSelect -= OnClickCard;
             }
+
+            //change turn
+            CardGameManager.instance.StartNextTurn();
+
+            //update infos
+            CardGameUIManager.instance.UpdateInfoLabel("");
         }
 
         private void OnClickCard(CardUI uiCard, BaseCard card)
@@ -44,7 +57,7 @@ namespace cg
                 for (int i = 0; i < genericCard.CardsBehaviours.Count; i++)
                 {
                     BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[i];
-                    
+
                 }
             }
         }

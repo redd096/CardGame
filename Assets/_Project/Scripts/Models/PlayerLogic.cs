@@ -8,6 +8,27 @@ namespace cg
     [System.Serializable]
     public class PlayerLogic
     {
-        public List<BaseCard> Cards = new List<BaseCard>();
+        /// <summary>
+        /// Current cards in hands
+        /// </summary>
+        public List<BaseCard> CardsInHands = new List<BaseCard>();
+
+        //Last turn blackboard
+
+        /// <summary>
+        /// Selected players index in this turn
+        /// </summary>
+        public List<int> LastSelectedPlayers { get; set; } = new List<int>();
+        /// <summary>
+        /// e.g. DrawDeckCardsFromPreviousRange -> Discards X cards and Draw the same amount of cards
+        /// </summary>
+        public int LastRange { get; set; }
+
+        //Bonus
+
+        /// <summary>
+        /// This user can't receive Stop for X turns
+        /// </summary>
+        public int BlockStopsForTurns;
     }
 }

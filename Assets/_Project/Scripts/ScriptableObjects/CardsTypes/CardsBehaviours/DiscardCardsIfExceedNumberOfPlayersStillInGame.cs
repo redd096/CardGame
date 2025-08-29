@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace cg
@@ -10,5 +11,15 @@ namespace cg
     {
         [Space]
         [Min(2)] public int ActivateWhenExceedThisNumberOfPlayerStillInGame = 2;
+
+        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            base.PlayerExecute(cardBehaviours, behaviourIndex);
+        }
+
+        public override void AdversaryExecute()
+        {
+            base.AdversaryExecute();
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using redd096;
+using TMPro;
 using UnityEngine;
 
 namespace cg
@@ -18,6 +19,7 @@ namespace cg
         [SerializeField] private Transform playerCardsContainer;
         [SerializeField] private Transform adversaryCardsContainer;
         [SerializeField] private GameObject adversaryCardsObj;
+        [SerializeField] private TMP_Text infoLabel;
         [Space]
         [SerializeField] private CardTypeColors colorCardTypes;
 
@@ -34,6 +36,7 @@ namespace cg
             SetCards(true, null);
             SetCards(false, null);
             ShowAdversaryCards(false);
+            UpdateInfoLabel("");
         }
 
         /// <summary>
@@ -105,6 +108,15 @@ namespace cg
         public void ShowAdversaryCards(bool show)
         {
             adversaryCardsObj.SetActive(show);
+        }
+
+        /// <summary>
+        /// Show info for player on what's happening or what to do
+        /// </summary>
+        /// <param name="text"></param>
+        public void UpdateInfoLabel(string text)
+        {
+            infoLabel.text = text;
         }
     }
 }
