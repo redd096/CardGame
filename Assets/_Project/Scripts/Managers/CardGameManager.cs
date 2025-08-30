@@ -15,9 +15,9 @@ namespace cg
         [Min(2)] public int NumberOfPlayers = 2;
 
         public Deck Deck { get; set; }
-        public List<PlayerLogic> Players { get; set; }
+        public List<PlayerLogic> Players { get; set; } = new List<PlayerLogic>();
         public int currentPlayer { get; private set; }
-        public Stack<BaseCard> DiscardsDeck { get; set; }
+        public Stack<BaseCard> DiscardsDeck { get; set; } = new Stack<BaseCard>();
 
         public System.Action<int> OnStartTurn;
         public System.Action<int> OnEndTurn;

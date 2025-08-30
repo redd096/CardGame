@@ -16,6 +16,23 @@ namespace cg
 
         public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            int playerIndex = CardGameManager.instance.currentPlayer;
+            PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
+
+            switch (TargetCard)
+            {
+                case ETargetCard.ChooseOnePlayer:
+                    //update infos
+                    CardGameUIManager.instance.UpdateInfoLabel("Select one player to attack");
+
+                    //register to buttons events and wait player to click it
+                    
+                    break;
+                case ETargetCard.EveryOtherPlayer:
+                    break;
+                case ETargetCard.EveryOtherPlayerExceptPreviouslyChoosedOne:
+                    break;
+            }
             yield return null;
         }
 

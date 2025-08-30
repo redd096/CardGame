@@ -15,13 +15,17 @@ namespace cg
         [Space]
         [SerializeField] private PlayerUI playerPrefab;
         [SerializeField] private Transform playersContainer;
-        [SerializeField] private CardUI cardPrefab;
+        [Space]
         [SerializeField] private BonusUI bonusPrefab;
+        [SerializeField] private Transform playerBonusContainer;
+        [SerializeField] private Transform adversaryBonusContainer;
+        [Space]
+        [SerializeField] private CardUI cardPrefab;
         [SerializeField] private Transform playerCardsContainer;
         [SerializeField] private Transform adversaryCardsContainer;
-        [SerializeField] private GameObject adversaryCardsObj;
-        [SerializeField] private TMP_Text infoLabel;
         [Space]
+        [SerializeField] private GameObject adversaryObj;
+        [SerializeField] private TMP_Text infoLabel;
         [SerializeField] private CardTypeColors colorCardTypes;
 
         private Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
@@ -33,12 +37,6 @@ namespace cg
         protected override void InitializeInstance()
         {
             base.InitializeInstance();
-
-            //remove placeholders
-            for (int i = playerCardsContainer.childCount - 1; i >= 0; i--)
-                Destroy(playerCardsContainer.GetChild(i).gameObject);
-            for (int i = adversaryCardsContainer.childCount - 1; i >= 0; i--)
-                Destroy(adversaryCardsContainer.GetChild(i).gameObject);
 
             //reset ui
             CreatePlayers(CardGameManager.instance.NumberOfPlayers);
@@ -110,8 +108,8 @@ namespace cg
             Dictionary<BaseCard, CardUI> dict = isRealPlayer ? playerCardsInScene : adversaryCardsInScene;
 
             //destroy previous
-            foreach (var keypair in dict)
-                Destroy(keypair.Value.gameObject);
+            for (int i = container.childCount - 1; i >= 0; i--)
+                Destroy(container.GetChild(i).gameObject);
             dict.Clear();
 
             //be sure there are cards
@@ -138,17 +136,20 @@ namespace cg
         /// </summary>
         public Dictionary<BaseBonus, BonusUI> SetBonus(bool isRealPlayer, BaseBonus[] bonusList)
         {
-            Transform container = isRealPlayer ? playerCardsContainer : adversaryCardsContainer;
+            Transform container = isRealPlayer ? playerBonusContainer : adversaryBonusContainer;
             Dictionary<BaseBonus, BonusUI> dict = isRealPlayer ? playerBonusInScene : adversaryBonusInScene;
 
             //destroy previous
-            foreach (var keypair in dict)
-                Destroy(keypair.Value.gameObject);
+            for (int i = container.childCount - 1; i >= 0; i--)
+                Destroy(container.GetChild(i).gameObject);
             dict.Clear();
 
             //be sure there are bonus
             if (bonusList == null)
+            {
+                container.gameObject.SetActive(dict.Count > 0); //show only if there are bonus
                 return dict;
+            }
 
             //and create new ones
             for (int i = 0; i < bonusList.Length; i++)
@@ -161,6 +162,7 @@ namespace cg
                 dict.Add(bonus, bonusUI);
             }
 
+            container.gameObject.SetActive(dict.Count > 0); //show only if there are bonus
             return dict;
         }
 
@@ -169,7 +171,7 @@ namespace cg
         /// </summary>
         public void ShowAdversaryCards(bool show)
         {
-            adversaryCardsObj.SetActive(show);
+            adversaryObj.SetActive(show);
         }
 
         /// <summary>
