@@ -14,7 +14,8 @@ namespace cg
 
         public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
-
+            PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
+            player.BlockStopsForTurns = NumberOfTurns;
         }
 
         public override void AdversaryExecute()
@@ -23,7 +24,7 @@ namespace cg
 
         public override EGenericTarget GetGenericTargetCard()
         {
-            return EGenericTarget.None;
+            return EGenericTarget.Self;
         }
     }
 }

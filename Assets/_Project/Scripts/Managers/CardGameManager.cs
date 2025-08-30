@@ -16,9 +16,11 @@ namespace cg
 
         public Deck Deck { get; set; }
         public List<PlayerLogic> Players { get; set; }
+        public int currentPlayer { get; private set; }
+
+        public System.Action<int> OnStartNextTurn;
 
         private bool isInitialized;
-        public int currentPlayer { get; private set; }
 
         protected override void InitializeInstance()
         {
@@ -28,7 +30,7 @@ namespace cg
             Deck = deckEditor.GenerateCloneForRuntime();
             Players = new List<PlayerLogic>();
             for (int i = 0; i < NumberOfPlayers; i++)
-                Players.Add(new PlayerLogic());
+                Players.Add(new PlayerLogic(i, OnStartNextTurn));
 
             isInitialized = true;
         }
@@ -91,6 +93,7 @@ namespace cg
         public int StartNextTurn()
         {
             currentPlayer++;
+            OnStartNextTurn?.Invoke(currentPlayer); //call event
             return currentPlayer;
         }
 

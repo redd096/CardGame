@@ -57,7 +57,7 @@ namespace cg
                 for (int i = 0; i < genericCard.CardsBehaviours.Count; i++)
                 {
                     BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[i];
-
+                    cardBehaviour.PlayerExecute(genericCard.CardsBehaviours, i);
                 }
             }
         }

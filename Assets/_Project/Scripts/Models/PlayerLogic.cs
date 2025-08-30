@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace cg
 {
@@ -30,5 +31,30 @@ namespace cg
         /// This user can't receive Stop for X turns
         /// </summary>
         public int BlockStopsForTurns;
+
+        private int playerIndex;
+
+        public PlayerLogic(int playerIndex, System.Action<int> OnStartNextTurn)
+        {
+            this.playerIndex = playerIndex;
+
+            OnStartNextTurn += (index) =>
+            {
+                //on start this player turn
+                if (index == this.playerIndex)
+                {
+                    //decrease bonus
+                    BlockStopsForTurns = Mathf.Max(BlockStopsForTurns - 1, 0);
+                }
+            };
+        }
+
+        /// <summary>
+        /// Check has still a life
+        /// </summary>
+        public bool IsAlive()
+        {
+            return CardsInHands.Find(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))) != null;
+        }
     }
 }
