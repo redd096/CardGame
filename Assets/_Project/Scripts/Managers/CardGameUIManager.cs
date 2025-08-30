@@ -69,6 +69,7 @@ namespace cg
 
         private void OnClickYesPopup()
         {
+            //TODO fare una funzione per accendere il popup e registrare 2 eventi per sì e no
         }
 
         private void OnClickNoPopup()

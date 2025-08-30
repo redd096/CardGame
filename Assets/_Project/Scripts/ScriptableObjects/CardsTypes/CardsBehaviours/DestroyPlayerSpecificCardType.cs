@@ -17,6 +17,8 @@ namespace cg
         {
             // return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
+            //TODO non dovrebbe far selezionare, ma dovrebbe automaticamente distruggere una carta di quel tipo all'avversario
+
             //be sure there are cards or bonus to select
             if (HasBonusOrCardsToSelect(attackedPlayer, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards))
             {

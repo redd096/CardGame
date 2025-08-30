@@ -56,7 +56,7 @@ namespace cg
                             int temp = selectedPlayerIndex;
                             yield return new WaitUntil(() => selectedPlayerIndex != temp);
                             ShowPlayerCards(selectedPlayerIndex);
-                            
+                            //TODO mostrare popup e se si preme no si nasconde il popup, se si preme si fa un break e si prosegue con la coroutine
                         }
                         
                         foreach (var keypair in CardGameUIManager.instance.playersInScene)
