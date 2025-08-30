@@ -28,11 +28,11 @@ namespace cg
         [SerializeField] private TMP_Text infoLabel;
         [SerializeField] private CardTypeColors colorCardTypes;
 
-        private Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
-        private Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
-        private Dictionary<BaseCard, CardUI> adversaryCardsInScene = new Dictionary<BaseCard, CardUI>();
-        private Dictionary<BaseBonus, BonusUI> playerBonusInScene = new Dictionary<BaseBonus, BonusUI>();
-        private Dictionary<BaseBonus, BonusUI> adversaryBonusInScene = new Dictionary<BaseBonus, BonusUI>();
+        public Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
+        public Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
+        public Dictionary<BaseCard, CardUI> adversaryCardsInScene = new Dictionary<BaseCard, CardUI>();
+        public Dictionary<BaseBonus, BonusUI> playerBonusInScene = new Dictionary<BaseBonus, BonusUI>();
+        public Dictionary<BaseBonus, BonusUI> adversaryBonusInScene = new Dictionary<BaseBonus, BonusUI>();
 
         protected override void InitializeInstance()
         {
@@ -44,7 +44,7 @@ namespace cg
             SetBonus(true, null);
             SetCards(false, null);
             SetBonus(false, null);
-            ShowAdversaryCards(false);
+            ShowAdversaryCardsAndBonus(false);
             UpdateInfoLabel("");
         }
 
@@ -102,7 +102,7 @@ namespace cg
         /// <summary>
         /// Set cards in UI for player or adversary
         /// </summary>
-        public Dictionary<BaseCard, CardUI> SetCards(bool isRealPlayer, BaseCard[] cards)
+        public Dictionary<BaseCard, CardUI> SetCards(bool isRealPlayer, BaseCard[] cards, bool showFront = true)
         {
             Transform container = isRealPlayer ? playerCardsContainer : adversaryCardsContainer;
             Dictionary<BaseCard, CardUI> dict = isRealPlayer ? playerCardsInScene : adversaryCardsInScene;
@@ -124,6 +124,7 @@ namespace cg
 
                 CardUI cardUI = Instantiate(cardPrefab, container);
                 cardUI.Init(card, color);
+                cardUI.ShowFrontOrBack(showFront);
 
                 dict.Add(card, cardUI);
             }
@@ -169,7 +170,7 @@ namespace cg
         /// <summary>
         /// Show or hide adversary cards
         /// </summary>
-        public void ShowAdversaryCards(bool show)
+        public void ShowAdversaryCardsAndBonus(bool show)
         {
             adversaryObj.SetActive(show);
         }

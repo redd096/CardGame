@@ -9,8 +9,8 @@ namespace cg
     /// </summary>
     public class CardUI : MonoBehaviour
     {
-        [SerializeField] private GameObject backCard;
         [SerializeField] private GameObject frontCard;
+        [SerializeField] private GameObject backCard;
         [Space]
         [SerializeField] private Image cardImage;
         [SerializeField] private TMP_Text cardNameLabel;

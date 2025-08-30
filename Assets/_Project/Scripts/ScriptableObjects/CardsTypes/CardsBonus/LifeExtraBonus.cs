@@ -11,5 +11,20 @@ namespace cg
         public LifeExtraBonus(Sprite icon, int quantity) : base(icon, quantity)
         {
         }
+
+        public override bool CanBeStolen()
+        {
+            return false;
+        }
+
+        public override bool CanBeDestroyed()
+        {
+            return true;
+        }
+
+        public override bool CanBeDiscarded()
+        {
+            return false;
+        }
     }
 }

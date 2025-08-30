@@ -10,7 +10,8 @@ namespace cg
     public abstract class BaseCardBehaviour
     {
         public const float DELAY_AFTER_BEHAVIOUR = 2f;
-        public const float DELAY_BEFORE_SHOW_DEAD_PLAYER = 1f;
+        public const float LOW_DELAY = 1f;
+        public const float BIG_DELAY = 2f;
 
         public ECardBehaviourSequenceType SequenceType;
 

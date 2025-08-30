@@ -14,6 +14,7 @@ namespace cg
         public CardGameSM StateMachine { get; set; }
 
         private const bool IS_REAL_PLAYER = false;
+        private const float DELAY_PLAY_CARD_INFO = 1f;
         private PlayerLogic currentPlayer;
 
         public void Enter()
@@ -83,6 +84,10 @@ namespace cg
                 //cycle card behaviours
                 if (card is GenericCard genericCard)
                 {
+                    //update ui
+                    CardGameUIManager.instance.UpdateInfoLabel($"Player {CardGameManager.instance.currentPlayer + 1} played card: {card.CardName}.");
+                    yield return new WaitForSeconds(DELAY_PLAY_CARD_INFO);
+
                     for (int i = 0; i < genericCard.CardsBehaviours.Count; i++)
                     {
                         BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[i];

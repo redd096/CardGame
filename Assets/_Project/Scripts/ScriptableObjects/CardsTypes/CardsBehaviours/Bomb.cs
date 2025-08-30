@@ -113,7 +113,7 @@ namespace cg
             CardGameUIManager.instance.UpdateInfoLabel($"Player {loserPlayerIndex + 1} lost {NumberLifesToRemove} lifes");
             if (loserPlayer.IsAlive() == false)
             {
-                yield return new WaitForSeconds(DELAY_BEFORE_SHOW_DEAD_PLAYER);
+                yield return new WaitForSeconds(LOW_DELAY);
                 CardGameUIManager.instance.UpdateInfoLabel($"Player {loserPlayerIndex + 1} is dead");
             }
             yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);

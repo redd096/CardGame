@@ -24,5 +24,20 @@ namespace cg
                 }
             };
         }
+
+        public override bool CanBeStolen()
+        {
+            return false;
+        }
+
+        public override bool CanBeDestroyed()
+        {
+            return false;
+        }
+
+        public override bool CanBeDiscarded()
+        {
+            return false;
+        }
     }
 }
