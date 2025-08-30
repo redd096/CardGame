@@ -15,7 +15,7 @@ namespace cg
         {
 
             //update infos
-            CardGameUIManager.instance.UpdateInfoLabel($"Player {CardGameManager.instance.currentPlayer} is selecting card to play");
+            CardGameUIManager.instance.UpdateInfoLabel($"Player {CardGameManager.instance.currentPlayer + 1} is selecting card to play");
         }
 
         public void UpdateState()
@@ -24,6 +24,13 @@ namespace cg
 
         public void Exit()
         {
+            //reset vars
+            PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
+            currentPlayer.LastSelectedPlayers.Clear();
+            currentPlayer.LastRange = 0;
+
+            //change turn
+            CardGameManager.instance.StartNextTurn();
 
             //update infos
             CardGameUIManager.instance.UpdateInfoLabel("");

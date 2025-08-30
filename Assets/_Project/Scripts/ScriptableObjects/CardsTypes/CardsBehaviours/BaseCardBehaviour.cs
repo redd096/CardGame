@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace cg
@@ -8,11 +9,23 @@ namespace cg
     [System.Serializable]
     public abstract class BaseCardBehaviour
     {
+        public const float DELAY_AFTER_BEHAVIOUR = 2f;
+        public const float DELAY_BEFORE_SHOW_DEAD_PLAYER = 1f;
+
         public ECardBehaviourSequenceType SequenceType;
 
-        public abstract void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
-        public abstract void AdversaryExecute();
+        public abstract IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
+        public abstract IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
         public abstract EGenericTarget GetGenericTargetCard();
+
+        /// <summary>
+        /// Execute on Draw instead of when player/adversary select it
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool ExecuteOnDraw()
+        {
+            return false;
+        }
 
         /// <summary>
         /// Does this behaviour have to be merged with previous behaviour? 

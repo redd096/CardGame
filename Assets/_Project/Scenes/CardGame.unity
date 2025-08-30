@@ -780,6 +780,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 2778934978585289210, guid: a4381ce4cc0a6b494a6b9fa48825181c, type: 3}
   playersContainer: {fileID: 1306116992}
   cardPrefab: {fileID: 8680551195877832144, guid: a996c1f69fb7f73ceadcbd40a115ff3b, type: 3}
+  bonusPrefab: {fileID: 7415067092118901172, guid: e444251a2747dc3b7af1bf7a740e9d36, type: 3}
   playerCardsContainer: {fileID: 573621110}
   adversaryCardsContainer: {fileID: 365522884}
   adversaryCardsObj: {fileID: 1313191241}
@@ -2912,7 +2913,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 397248867}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.86863464
+  m_Size: 0.7747749
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4191,7 +4192,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1770806491}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.86863464
+  m_Size: 0.7747749
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5971,9 +5972,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 755399815}
   - {fileID: 1495841811}
   - {fileID: 1313191242}
-  - {fileID: 755399815}
   - {fileID: 893378481}
   m_Father: {fileID: 1504275296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -49,7 +49,7 @@ namespace cg
             //foreach player
             for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++)
             {
-                bool isPlayer = playerIndex == 0;
+                bool isPlayer = CardGameManager.instance.IsRealPlayer(playerIndex);
 
                 for (int cardIndex = 0; cardIndex < rules.StartCards; cardIndex++)
                 {

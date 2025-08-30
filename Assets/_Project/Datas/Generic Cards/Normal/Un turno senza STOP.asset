@@ -27,3 +27,4 @@ MonoBehaviour:
       data:
         SequenceType: 0
         NumberOfTurns: 1
+        bonusSprite: {fileID: 2389193319765324094, guid: b4d3274b68724c5418b6ced2663f31b3, type: 3}

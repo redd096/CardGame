@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using redd096.StateMachine;
 
 namespace cg
@@ -11,8 +12,12 @@ namespace cg
         public CardGameStartState StartState;
         public CardGameDrawStartingCardsState DrawStartingCardsState;
         public CardGameDrawTurnCardsState DrawTurnCardsState;
+        public CardGameAutomaticallyPlayCardsOnDrawState AutomaticallyPlayCardsOnDrawState;
         public CardGamePlayerTurnState PlayerTurnState;
         public CardGameAdversaryTurnState AdversaryTurnState;
+
+        //blackboard
+        public List<BaseCard> CardsToPlayOnDraw { get; set; } = new List<BaseCard>();
 
         protected override void Awake()
         {

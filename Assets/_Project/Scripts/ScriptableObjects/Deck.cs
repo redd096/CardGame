@@ -139,20 +139,22 @@ namespace cg
             //int length = 0;
             //foreach (var v in generateDeckCards)
             //    length += v.Quantity;
-
             //Cards = new BaseCard[length];
+
             Cards = new List<BaseCard>();
-            int counter = 0;
             //foreach card
             foreach (var v in generateDeckCards)
             {
                 //add x quantity
                 for (int i = 0; i < v.Quantity; i++)
                 {
-                    Cards[counter] = v.Card;
-                    counter++;
+                    Cards.Add(v.Card);
                 }
             }
+
+            // Mark the object as dirty so Unity saves the changes
+            OnValidate();
+            EditorUtility.SetDirty(this);
         }
 
         [Button("Shuffle Deck")]
@@ -162,6 +164,7 @@ namespace cg
             ShuffleDeck();
 
             // Mark the object as dirty so Unity saves the changes
+            OnValidate();
             EditorUtility.SetDirty(this);
         }
 

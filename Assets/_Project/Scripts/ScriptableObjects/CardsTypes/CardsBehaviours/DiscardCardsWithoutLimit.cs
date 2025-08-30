@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,14 +12,15 @@ namespace cg
     {
         [Space]
         public EDiscardTarget TargetCard;
-        
-        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
-        {
 
+        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        {
+            yield return null;
         }
 
-        public override void AdversaryExecute()
+        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return null;
         }
 
         public override EGenericTarget GetGenericTargetCard()

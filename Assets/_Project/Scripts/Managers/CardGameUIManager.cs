@@ -16,6 +16,7 @@ namespace cg
         [SerializeField] private PlayerUI playerPrefab;
         [SerializeField] private Transform playersContainer;
         [SerializeField] private CardUI cardPrefab;
+        [SerializeField] private BonusUI bonusPrefab;
         [SerializeField] private Transform playerCardsContainer;
         [SerializeField] private Transform adversaryCardsContainer;
         [SerializeField] private GameObject adversaryCardsObj;
@@ -26,6 +27,8 @@ namespace cg
         private Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
         private Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
         private Dictionary<BaseCard, CardUI> adversaryCardsInScene = new Dictionary<BaseCard, CardUI>();
+        private Dictionary<BaseBonus, BonusUI> playerBonusInScene = new Dictionary<BaseBonus, BonusUI>();
+        private Dictionary<BaseBonus, BonusUI> adversaryBonusInScene = new Dictionary<BaseBonus, BonusUI>();
 
         protected override void InitializeInstance()
         {
@@ -34,7 +37,9 @@ namespace cg
             //reset ui
             CreatePlayers(CardGameManager.instance.NumberOfPlayers);
             SetCards(true, null);
+            SetBonus(true, null);
             SetCards(false, null);
+            SetBonus(false, null);
             ShowAdversaryCards(false);
             UpdateInfoLabel("");
         }
@@ -71,6 +76,26 @@ namespace cg
         }
 
         /// <summary>
+        /// Update players UI (playerTurn, players alive, etc...)
+        /// </summary>
+        public void UpdatePlayers(int selectedPlayerIndex = -1)
+        {
+            List<PlayerLogic> players = CardGameManager.instance.Players;
+            int playerTurn = CardGameManager.instance.currentPlayer;
+
+            foreach (var keypair in playersInScene)
+            {
+                int playerIndex = keypair.Key;
+                PlayerLogic player = players[playerIndex];
+                PlayerUI playerUI = keypair.Value;
+
+                playerUI.SetIsActive(player.IsAlive());
+                playerUI.SetIsPlayerTurn(playerTurn == playerIndex);
+                playerUI.SetSelected(selectedPlayerIndex == playerIndex);
+            }
+        }
+
+        /// <summary>
         /// Set cards in UI for player or adversary
         /// </summary>
         public Dictionary<BaseCard, CardUI> SetCards(bool isPlayer, BaseCard[] cards)
@@ -97,6 +122,37 @@ namespace cg
                 cardUI.Init(card, color);
 
                 dict.Add(card, cardUI);
+            }
+
+            return dict;
+        }
+
+        /// <summary>
+        /// Set bonus in UI for player or adversary
+        /// </summary>
+        public Dictionary<BaseBonus, BonusUI> SetBonus(bool isPlayer, BaseBonus[] bonusList)
+        {
+            Transform container = isPlayer ? playerCardsContainer : adversaryCardsContainer;
+            Dictionary<BaseBonus, BonusUI> dict = isPlayer ? playerBonusInScene : adversaryBonusInScene;
+
+            //destroy previous
+            for (int i = container.childCount - 1; i >= 0; i--)
+                Destroy(container.GetChild(i).gameObject);
+            dict.Clear();
+
+            //be sure there are bonus
+            if (bonusList == null)
+                return dict;
+
+            //and create new ones
+            for (int i = 0; i < bonusList.Length; i++)
+            {
+                BaseBonus bonus = bonusList[i];
+
+                BonusUI bonusUI = Instantiate(bonusPrefab, container);
+                bonusUI.Init(bonus);
+
+                dict.Add(bonus, bonusUI);
             }
 
             return dict;

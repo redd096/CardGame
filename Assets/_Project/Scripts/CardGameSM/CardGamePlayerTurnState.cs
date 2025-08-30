@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using redd096.StateMachine;
 
@@ -11,12 +12,13 @@ namespace cg
     {
         public CardGameSM StateMachine { get; set; }
 
+        private PlayerLogic currentPlayer;
         private Dictionary<BaseCard, CardUI> uiCards = new Dictionary<BaseCard, CardUI>();
 
         public void Enter()
         {
             //set player cards in ui
-            PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
+            currentPlayer = CardGameManager.instance.GetCurrentPlayer();
             List<BaseCard> playerCards = currentPlayer.CardsInHands;
             uiCards = CardGameUIManager.instance.SetCards(isPlayer: true, playerCards.ToArray());
 
@@ -39,11 +41,13 @@ namespace cg
             //unregister cards events
             foreach (var keypair in uiCards)
             {
-                keypair.Value.onClickSelect -= OnClickCard;
+                if (keypair.Value)
+                    keypair.Value.onClickSelect -= OnClickCard;
             }
 
-            //change turn
-            CardGameManager.instance.StartNextTurn();
+            //reset vars
+            currentPlayer.LastSelectedPlayers.Clear();
+            currentPlayer.LastRange = 0;
 
             //update infos
             CardGameUIManager.instance.UpdateInfoLabel("");
@@ -51,14 +55,28 @@ namespace cg
 
         private void OnClickCard(CardUI uiCard, BaseCard card)
         {
-            if (card is GenericCard genericCard)
+            //start coroutine
+            StateMachine.StartCoroutine(PlayCardBehaviours());
+
+            IEnumerator PlayCardBehaviours()
             {
-                //cycle cards behaviours
-                for (int i = 0; i < genericCard.CardsBehaviours.Count; i++)
+                //discard card and update ui
+                CardGameManager.instance.DiscardCard(CardGameManager.instance.currentPlayer, card);
+                CardGameUIManager.instance.SetCards(isPlayer: true, currentPlayer.CardsInHands.ToArray());
+
+                //cycle card behaviours
+                if (card is GenericCard genericCard)
                 {
-                    BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[i];
-                    cardBehaviour.PlayerExecute(genericCard.CardsBehaviours, i);
+                    for (int i = 0; i < genericCard.CardsBehaviours.Count; i++)
+                    {
+                        BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[i];
+                        yield return cardBehaviour.PlayerExecute(genericCard.CardsBehaviours, i);
+                    }
                 }
+
+                //change turn
+                CardGameManager.instance.StartNextTurn();
+                StateMachine.SetState(StateMachine.DrawTurnCardsState);
             }
         }
     }

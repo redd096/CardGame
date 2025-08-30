@@ -9,6 +9,9 @@ namespace cg
     /// </summary>
     public class CardUI : MonoBehaviour
     {
+        [SerializeField] private GameObject backCard;
+        [SerializeField] private GameObject frontCard;
+        [Space]
         [SerializeField] private Image cardImage;
         [SerializeField] private TMP_Text cardNameLabel;
         [SerializeField] private TMP_Text cardDescriptionLabel;
@@ -39,11 +42,21 @@ namespace cg
         public void Init(BaseCard card, Color color)
         {
             this.card = card;
-            
+
             cardImage.sprite = card.CardSprite;
             cardNameLabel.text = card.CardName;
             cardDescriptionLabel.text = card.Description;
             colorTypeImage.color = color;
+        }
+
+        /// <summary>
+        /// Show front or the back of the card
+        /// </summary>
+        /// <param name="showFront"></param>
+        public void ShowFrontOrBack(bool showFront)
+        {
+            frontCard.SetActive(showFront);
+            backCard.SetActive(showFront == false);
         }
     }
 }

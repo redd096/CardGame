@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 775cfd5aa8dc0fb4bb8582986d33b540, type: 3}
-  m_Name: Vita extra
+  m_Name: Vita Extra
   m_EditorClassIdentifier: Assembly-CSharp::cg.GenericCard
-  CardName: Vita extra
-  Description: Vita extra
+  CardName: Vita Extra
+  Description: Vita Extra
   CardType: 4
   CardSprite: {fileID: 0}
   cardsBehaviour:
     Behaviours:
-    - rid: 7926285362946375798
+    - rid: 7926285453650821186
   references:
     version: 2
     RefIds:
-    - rid: 7926285362946375798
-      type: {class: ExtraLife, ns: cg, asm: Assembly-CSharp}
+    - rid: 7926285453650821186
+      type: {class: LifeExtra, ns: cg, asm: Assembly-CSharp}
       data:
         SequenceType: 0
+        bonusSprite: {fileID: 8847773858092745476, guid: 7236779680b0f190bbcd3a67ee40ec66, type: 3}

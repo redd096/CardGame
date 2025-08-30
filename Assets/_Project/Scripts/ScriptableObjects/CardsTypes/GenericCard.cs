@@ -30,8 +30,29 @@ namespace cg
         public bool HasBehaviour(System.Type type)
         {
             if (CardsBehaviours != null && CardsBehaviours.Count > 0)
-                return CardsBehaviours.Find(y => y.GetType() == typeof(Life)) != null;
+                return CardsBehaviours.Find(x => x.GetType() == type) != null;
             return false;
+        }
+
+        /// <summary>
+        /// Check if there are Behaviours with ExecuteOnDraw
+        /// </summary>
+        /// <param name="behavioursToExecuteOnDraw"></param>
+        /// <returns></returns>
+        public bool HasBehaviourToExecuteOnDraw(out List<BaseCardBehaviour> behavioursToExecuteOnDraw)
+        {
+            behavioursToExecuteOnDraw = new List<BaseCardBehaviour>();
+
+            if (CardsBehaviours != null && CardsBehaviours.Count > 0)
+            {
+                foreach (var behaviour in CardsBehaviours)
+                {
+                    if (behaviour.ExecuteOnDraw())
+                        behavioursToExecuteOnDraw.Add(behaviour);
+                }
+            }
+
+            return behavioursToExecuteOnDraw.Count > 0;
         }
     }
 
@@ -91,6 +112,7 @@ namespace cg
             // Customize how each element is drawn in the list
             reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
+                rect.x += 10; //space from the Draggablehandler
                 var element = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
 
                 //show sequence THEN with more indent level

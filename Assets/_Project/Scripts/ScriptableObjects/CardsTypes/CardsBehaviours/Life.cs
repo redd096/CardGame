@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace cg
@@ -8,12 +9,14 @@ namespace cg
     [System.Serializable]
     public class Life : BaseCardBehaviour
     {
-        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return null;
         }
 
-        public override void AdversaryExecute()
+        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return null;
         }
 
         public override EGenericTarget GetGenericTargetCard()

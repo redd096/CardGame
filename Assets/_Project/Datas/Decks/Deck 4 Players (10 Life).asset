@@ -137,9 +137,9 @@ MonoBehaviour:
   numberOfDestroyCards: 31
   numberOfDiscardCards: 13
   numberOfNormalCards: 25
-  numberOfLifeCards: 14
+  numberOfLifeCards: 12
   numberOfStopCards: 12
-  specificLifeCards: 12
+  specificLifeCards: 10
   specificBombCards: 1
   specificSwapHandsCards: 1
   generateDeckCards:

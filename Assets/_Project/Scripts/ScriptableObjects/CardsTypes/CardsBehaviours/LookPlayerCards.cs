@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using redd096.Attributes;
 using UnityEngine;
@@ -16,12 +17,14 @@ namespace cg
             + "(e.g. Look 2 cards and Steal 1 card, then the same to another player, and so on...)")]
         public ETargetCard TargetCard;
 
-        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return null;
         }
 
-        public override void AdversaryExecute()
+        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return null;
         }
 
         public override EGenericTarget GetGenericTargetCard()

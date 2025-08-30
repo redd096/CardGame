@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using redd096.Attributes;
 using UnityEngine;
 
 namespace cg
@@ -11,15 +13,32 @@ namespace cg
     {
         [Space]
         [Min(1)] public int NumberOfTurns = 1;
+        [ShowAssetPreview] public Sprite bonusSprite;
 
-        public override void PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
-            PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
-            player.BlockStopsForTurns = NumberOfTurns;
+            yield return Execute(true);
         }
 
-        public override void AdversaryExecute()
+        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
         {
+            yield return Execute(false);
+        }
+
+        private IEnumerator Execute(bool isPlayer)
+        {
+            //set block for x turns
+            int playerIndex = CardGameManager.instance.currentPlayer;
+            PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
+            player.AddBonus(new BlockStopBonus(bonusSprite, NumberOfTurns, isPlayer, playerIndex, CardGameManager.instance.OnStartTurn));
+
+            //update ui
+            CardGameUIManager.instance.SetBonus(isPlayer, player.ActiveBonus.ToArray());
+
+            //update infos
+            BaseBonus bonus = player.GetBonus(typeof(BlockStopBonus));
+            CardGameUIManager.instance.UpdateInfoLabel($"Player {CardGameManager.instance.currentPlayer + 1} added {NumberOfTurns} turns. Now will block the Stops for {bonus.Quantity} turns");
+            yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
         }
 
         public override EGenericTarget GetGenericTargetCard()

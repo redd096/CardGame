@@ -26,3 +26,4 @@ MonoBehaviour:
       type: {class: Bomb, ns: cg, asm: Assembly-CSharp}
       data:
         SequenceType: 0
+        NumberLifesToRemove: 1

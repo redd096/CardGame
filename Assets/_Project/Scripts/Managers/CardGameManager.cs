@@ -17,8 +17,10 @@ namespace cg
         public Deck Deck { get; set; }
         public List<PlayerLogic> Players { get; set; }
         public int currentPlayer { get; private set; }
+        public Stack<BaseCard> DiscardsDeck { get; set; }
 
-        public System.Action<int> OnStartNextTurn;
+        public System.Action<int> OnStartTurn;
+        public System.Action<int> OnEndTurn;
 
         private bool isInitialized;
 
@@ -30,7 +32,7 @@ namespace cg
             Deck = deckEditor.GenerateCloneForRuntime();
             Players = new List<PlayerLogic>();
             for (int i = 0; i < NumberOfPlayers; i++)
-                Players.Add(new PlayerLogic(i, OnStartNextTurn));
+                Players.Add(new PlayerLogic());
 
             isInitialized = true;
         }
@@ -70,10 +72,11 @@ namespace cg
         /// Draw next card in the deck
         /// </summary>
         /// <param name="playerIndex">The player who draw the card</param>
-        public void DrawNextCard(int playerIndex)
+        public BaseCard DrawNextCard(int playerIndex)
         {
             BaseCard card = Deck.DrawNextCard();
             Players[playerIndex].CardsInHands.Add(card);
+            return card;
         }
 
         /// <summary>
@@ -81,20 +84,33 @@ namespace cg
         /// </summary>
         /// <param name="playerIndex">The player who draw the card</param>
         /// <param name="behaviour"></param>
-        public void DrawCardWithSpecificBehaviour(int playerIndex, System.Type behaviour)
+        public BaseCard DrawCardWithSpecificBehaviour(int playerIndex, System.Type behaviour)
         {
             BaseCard card = Deck.DrawCardWithSpecificBehaviour(behaviour);
             Players[playerIndex].CardsInHands.Add(card);
+            return card;
+        }
+
+        /// <summary>
+        /// Remove card from player hands and put in DiscardDeck
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="card"></param>
+        public void DiscardCard(int playerIndex, BaseCard card)
+        {
+            //remove card from player and add to discardsDeck
+            Players[playerIndex].CardsInHands.Remove(card);
+            DiscardsDeck.Push(card);
         }
 
         /// <summary>
         /// Start turn for next player
         /// </summary>
-        public int StartNextTurn()
+        public void StartNextTurn()
         {
+            OnEndTurn?.Invoke(currentPlayer);   //call end turn event
             currentPlayer++;
-            OnStartNextTurn?.Invoke(currentPlayer); //call event
-            return currentPlayer;
+            OnStartTurn?.Invoke(currentPlayer); //call start turn event
         }
 
         /// <summary>
@@ -103,6 +119,25 @@ namespace cg
         public PlayerLogic GetCurrentPlayer()
         {
             return Players[currentPlayer];
+        }
+
+        /// <summary>
+        /// Return if this playerIndex is the Player who is playing the game
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        public bool IsRealPlayer(int playerIndex)
+        {
+            return playerIndex == 0;
+        }
+
+        /// <summary>
+        /// Get the player who is player the game
+        /// </summary>
+        /// <returns></returns>
+        public PlayerLogic GetRealPlayer()
+        {
+            return Players[0];
         }
     }
 }
