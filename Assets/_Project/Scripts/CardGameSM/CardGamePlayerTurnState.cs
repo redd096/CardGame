@@ -12,6 +12,7 @@ namespace cg
     {
         public CardGameSM StateMachine { get; set; }
 
+        private const bool IS_REAL_PLAYER = true;
         private PlayerLogic currentPlayer;
         private Dictionary<BaseCard, CardUI> uiCards = new Dictionary<BaseCard, CardUI>();
 
@@ -20,7 +21,7 @@ namespace cg
             //set player cards in ui
             currentPlayer = CardGameManager.instance.GetCurrentPlayer();
             List<BaseCard> playerCards = currentPlayer.CardsInHands;
-            uiCards = CardGameUIManager.instance.SetCards(isRealPlayer: true, playerCards.ToArray());
+            uiCards = CardGameUIManager.instance.SetCards(IS_REAL_PLAYER, playerCards.ToArray());
 
             //and register to cards events
             foreach (var keypair in uiCards)
@@ -62,7 +63,7 @@ namespace cg
             {
                 //discard card and update ui
                 CardGameManager.instance.DiscardCard(CardGameManager.instance.currentPlayer, card);
-                CardGameUIManager.instance.SetCards(isRealPlayer: true, currentPlayer.CardsInHands.ToArray());
+                CardGameUIManager.instance.SetCards(IS_REAL_PLAYER, currentPlayer.CardsInHands.ToArray());
 
                 //cycle card behaviours
                 if (card is GenericCard genericCard)
