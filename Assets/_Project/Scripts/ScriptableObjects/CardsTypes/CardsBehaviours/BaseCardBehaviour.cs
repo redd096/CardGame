@@ -15,8 +15,8 @@ namespace cg
 
         public ECardBehaviourSequenceType SequenceType;
 
-        public abstract IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
-        public abstract IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex);
+        public abstract IEnumerator PlayerExecute(BaseCard card, int behaviourIndex);
+        public abstract IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex);
         public abstract EGenericTarget GetGenericTargetCard();
 
         /// <summary>

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace cg
@@ -13,14 +12,16 @@ namespace cg
         [Space]
         public ECardType TypeCardsToDestroyAgain;
 
-        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        protected override IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
-            yield return base.PlayerExecute(cardBehaviours, behaviourIndex);
-        }
+            yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
-        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
-        {
-            yield return base.AdversaryExecute(cardBehaviours, behaviourIndex);
+            //if destroyed correct card type, destroy again one card
+            if (selectedCard != null && selectedCard.CardType == TypeCardsToDestroyAgain
+                || selectedBonus != null && selectedBonus.BonusCardType == TypeCardsToDestroyAgain)
+            {
+                yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
+            }
         }
     }
 }

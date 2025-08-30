@@ -13,14 +13,16 @@ namespace cg
         [Space]
         public ECardType TypeCardsToStealInsteadOfDestroy;
 
-        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        protected override IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
-            yield return base.PlayerExecute(cardBehaviours, behaviourIndex);
-        }
+            yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
-        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
-        {
-            yield return base.AdversaryExecute(cardBehaviours, behaviourIndex);
+            //if destroyed correct card type, destroy again one card
+            if (selectedCard != null && selectedCard.CardType == TypeCardsToStealInsteadOfDestroy
+                || selectedBonus != null && selectedBonus.BonusCardType == TypeCardsToStealInsteadOfDestroy)
+            {
+                Debug.LogError("TODO - INSTEAD OF CALL DISCARD, SHOULD STEAL THE SELECTED CARD OR BONUS");
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using redd096.Attributes;
 using UnityEngine;
 
@@ -15,22 +14,22 @@ namespace cg
         [Min(1)] public int NumberOfTurns = 1;
         [ShowAssetPreview] public Sprite bonusSprite;
 
-        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
         {
-            yield return Execute(true);
+            yield return Execute(true, card);
         }
 
-        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
         {
-            yield return Execute(false);
+            yield return Execute(false, card);
         }
 
-        private IEnumerator Execute(bool isRealPlayer)
+        private IEnumerator Execute(bool isRealPlayer, BaseCard card)
         {
             //set block for x turns
             int playerIndex = CardGameManager.instance.currentPlayer;
             PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
-            player.AddBonus(new BlockStopBonus(bonusSprite, NumberOfTurns, isRealPlayer, playerIndex, CardGameManager.instance.OnStartTurn));
+            player.AddBonus(new BlockStopBonus(bonusSprite, NumberOfTurns, card.CardType, isRealPlayer, playerIndex, CardGameManager.instance.OnStartTurn));
 
             //update ui
             CardGameUIManager.instance.SetBonus(isRealPlayer, player.ActiveBonus.ToArray());

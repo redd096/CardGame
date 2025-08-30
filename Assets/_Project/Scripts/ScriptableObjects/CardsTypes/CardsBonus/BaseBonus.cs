@@ -10,11 +10,13 @@ namespace cg
     {
         public Sprite Icon;
         public int Quantity;
+        public ECardType BonusCardType;
 
-        public BaseBonus(Sprite icon, int quantity)
+        public BaseBonus(Sprite icon, int quantity, ECardType bonusCardType)
         {
             Icon = icon;
             Quantity = quantity;
+            BonusCardType = bonusCardType;
         }
 
         /// <summary>

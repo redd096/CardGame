@@ -8,7 +8,7 @@ namespace cg
     /// </summary>
     public class LifeExtraBonus : BaseBonus
     {
-        public LifeExtraBonus(Sprite icon, int quantity) : base(icon, quantity)
+        public LifeExtraBonus(Sprite icon, int quantity, ECardType bonusCardType) : base(icon, quantity, bonusCardType)
         {
         }
 

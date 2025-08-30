@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace cg
@@ -14,12 +13,12 @@ namespace cg
         [Space]
         public EDeckType Deck;
 
-        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
         {
             yield return null;
         }
 
-        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
         {
             yield return null;
         }

@@ -8,7 +8,7 @@ namespace cg
     /// </summary>
     public class BlockStopBonus : BaseBonus
     {
-        public BlockStopBonus(Sprite icon, int quantity, bool isRealPlayer, int playerIndex, System.Action<int> onStartTurn) : base(icon, quantity)
+        public BlockStopBonus(Sprite icon, int quantity, ECardType bonusCardType, bool isRealPlayer, int playerIndex, System.Action<int> onStartTurn) : base(icon, quantity, bonusCardType)
         {
             onStartTurn += (index) =>
             {

@@ -20,12 +20,12 @@ namespace cg
             return true;
         }
 
-        public override IEnumerator PlayerExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
         {
             yield return Execute();
         }
 
-        public override IEnumerator AdversaryExecute(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex)
+        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
         {
             yield return Execute();
         }
