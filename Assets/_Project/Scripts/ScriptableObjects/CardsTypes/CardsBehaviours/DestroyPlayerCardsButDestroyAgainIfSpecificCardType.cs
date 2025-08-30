@@ -18,7 +18,7 @@ namespace cg
 
             //if destroyed correct card type, destroy again one card
             if (selectedCard != null && selectedCard.CardType == TypeCardsToDestroyAgain
-                || selectedBonus != null && selectedBonus.BonusCardType == TypeCardsToDestroyAgain)
+                || selectedBonus != null && selectedBonus.CardType == TypeCardsToDestroyAgain)
             {
                 yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
             }

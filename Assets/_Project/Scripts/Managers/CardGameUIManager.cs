@@ -31,8 +31,8 @@ namespace cg
         public Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
         public Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
         public Dictionary<BaseCard, CardUI> adversaryCardsInScene = new Dictionary<BaseCard, CardUI>();
-        public Dictionary<BaseBonus, BonusUI> playerBonusInScene = new Dictionary<BaseBonus, BonusUI>();
-        public Dictionary<BaseBonus, BonusUI> adversaryBonusInScene = new Dictionary<BaseBonus, BonusUI>();
+        public Dictionary<BaseCard, BonusUI> playerBonusInScene = new Dictionary<BaseCard, BonusUI>();
+        public Dictionary<BaseCard, BonusUI> adversaryBonusInScene = new Dictionary<BaseCard, BonusUI>();
 
         protected override void InitializeInstance()
         {
@@ -135,10 +135,10 @@ namespace cg
         /// <summary>
         /// Set bonus in UI for player or adversary
         /// </summary>
-        public Dictionary<BaseBonus, BonusUI> SetBonus(bool isRealPlayer, BaseBonus[] bonusList)
+        public Dictionary<BaseCard, BonusUI> SetBonus(bool isRealPlayer, BaseCard[] bonusList)
         {
             Transform container = isRealPlayer ? playerBonusContainer : adversaryBonusContainer;
-            Dictionary<BaseBonus, BonusUI> dict = isRealPlayer ? playerBonusInScene : adversaryBonusInScene;
+            Dictionary<BaseCard, BonusUI> dict = isRealPlayer ? playerBonusInScene : adversaryBonusInScene;
 
             //destroy previous
             for (int i = container.childCount - 1; i >= 0; i--)
@@ -155,7 +155,7 @@ namespace cg
             //and create new ones
             for (int i = 0; i < bonusList.Length; i++)
             {
-                BaseBonus bonus = bonusList[i];
+                BaseCard bonus = bonusList[i];
 
                 BonusUI bonusUI = Instantiate(bonusPrefab, container);
                 bonusUI.Init(bonus);

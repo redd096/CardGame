@@ -16,7 +16,7 @@ namespace cg
         /// <summary>
         /// Player current active bonus
         /// </summary>
-        public List<BaseBonus> ActiveBonus = new List<BaseBonus>();
+        public List<BaseCard> ActiveBonus = new List<BaseCard>();
 
         //Last turn blackboard
 
@@ -35,7 +35,7 @@ namespace cg
         public bool IsAlive()
         {
             return CardsInHands.Find(x => x is GenericCard genericCard && genericCard.HasBehaviour(typeof(Life))) != null
-                || HasBonus(typeof(LifeExtraBonus), out _);
+                || HasBonus(typeof(LifeExtra));
         }
 
         /// <summary>
@@ -43,54 +43,48 @@ namespace cg
         /// </summary>
         /// <param name="type">Bonus type</param>
         /// <returns></returns>
-        public bool HasBonus(System.Type type, out int bonusIndex)
+        public bool HasBonus(System.Type type)
         {
-            bonusIndex = -1;
             if (ActiveBonus != null && ActiveBonus.Count > 0)
-                bonusIndex = ActiveBonus.FindIndex(x => x.GetType() == type);
-
-            return bonusIndex > -1;
+                return ActiveBonus.Find(x => x.GetType() == type) != null;
+            return false;
         }
 
         /// <summary>
-        /// Return bonus from the player list
+        /// Return the count of this type of bonus
         /// </summary>
         /// <param name="type">Bonus type</param>
         /// <returns></returns>
-        public BaseBonus GetBonus(System.Type type)
+        public int GetBonusQuantity(System.Type type)
         {
-            if (HasBonus(type, out int bonusIndex))
-                return ActiveBonus[bonusIndex];
-            return null;
+            if (HasBonus(type))
+                return ActiveBonus.FindAll(x => x.GetType() == type).Count;
+            return 0;
         }
 
         /// <summary>
-        /// Add bonus to player list. 
-        /// If player has already this bonus, just add its quantity
+        /// Add bonus to player list
         /// </summary>
         /// <param name="bonus"></param>
-        public void AddBonus(BaseBonus bonus)
+        public void AddBonus(BaseCard bonus)
         {
-            if (HasBonus(bonus.GetType(), out int bonusIndex))
-                ActiveBonus[bonusIndex].Quantity += bonus.Quantity;
-            else
-                ActiveBonus.Add(bonus);
+            ActiveBonus.Add(bonus);
         }
 
         /// <summary>
-        /// Decrease quantity from bonus in player list. 
-        /// If the bonus reach 0, remove from the list
+        /// Remove bonus from the list
         /// </summary>
         /// <param name="type">Bonus type</param>
         /// <param name="quantity"></param>
-        public void DecreaseBonus(System.Type type, int quantity)
+        public void RemoveBonus(System.Type type, int quantity)
         {
-            if (HasBonus(type, out int bonusIndex))
+            for (int i = 0; i < quantity; i++)
             {
-                ActiveBonus[bonusIndex].Quantity -= quantity;
-
-                if (ActiveBonus[bonusIndex].Quantity <= 0)
-                    ActiveBonus.RemoveAt(bonusIndex);
+                if (HasBonus(type))
+                {
+                    int index = ActiveBonus.FindIndex(x => x.GetType() == type);
+                    ActiveBonus.RemoveAt(index);
+                }
             }
         }
     }

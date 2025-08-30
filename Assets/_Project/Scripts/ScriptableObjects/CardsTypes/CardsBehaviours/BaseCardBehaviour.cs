@@ -46,7 +46,7 @@ namespace cg
         /// Does this behaviour have to be merged with previous behaviour? 
         /// (e.g. GiveCardsToPlayer is merged -> Steal 1 card and Give 1 card, then the same to another player, and so on...)
         /// </summary>
-        protected virtual bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour previousBehaviour)
+        protected virtual bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour otherBehaviour)
         {
             return false;
         }
@@ -70,7 +70,7 @@ namespace cg
         /// Does this behaviour have to be merged with next behaviour? 
         /// (e.g. LookPlayerCards is merged -> Look 2 cards and Steal 1 card, then the same to another player, and so on...)
         /// </summary>
-        protected virtual bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour nextBehaviour)
+        protected virtual bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour otherBehaviour)
         {
             return false;
         }

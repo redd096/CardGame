@@ -32,15 +32,15 @@ namespace cg
             return TargetCard.AsGenericTarget();
         }
 
-        protected override bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour previousBehaviour)
+        protected override bool MergeWithPreviousBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour otherBehaviour)
         {
             //check targets
             EGenericTarget target = GetGenericTargetCard();
-            EGenericTarget nextTarget = previousBehaviour != null ? previousBehaviour.GetGenericTargetCard() : EGenericTarget.None;
-            if (target == nextTarget)
+            EGenericTarget otherTarget = otherBehaviour != null ? otherBehaviour.GetGenericTargetCard() : EGenericTarget.None;
+            if (target == otherTarget)
                 return true;
 
-            return base.MergeWithPreviousBehaviour(cardBehaviours, behaviourIndex, previousBehaviour);
+            return base.MergeWithPreviousBehaviour(cardBehaviours, behaviourIndex, otherBehaviour);
         }
     }
 }

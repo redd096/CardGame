@@ -1,38 +1,33 @@
-
 using UnityEngine;
 
 namespace cg
 {
     /// <summary>
-    /// Base class for every card bonus
+    /// Interface to add to BaseCard for activate bonus in scene (e.g. LifeExtra to put an extra life in scene when played)
     /// </summary>
-    public abstract class BaseBonus
+    public interface IBonusCard
     {
-        public Sprite Icon;
-        public int Quantity;
-        public ECardType BonusCardType;
+        Sprite Icon { get; }
 
-        public BaseBonus(Sprite icon, int quantity, ECardType bonusCardType)
-        {
-            Icon = icon;
-            Quantity = quantity;
-            BonusCardType = bonusCardType;
-        }
-
+        /// <summary>
+        /// Called when activate the bonus (when play the card)
+        /// </summary>
+        /// <param name="playerIndex">The player who played this card</param>
+        void OnActivateBonus(int playerIndex);
         /// <summary>
         /// When player has to select cards to steal, can steal this bonus from the playing field?
         /// </summary>
         /// <returns></returns>
-        public abstract bool CanBeStolen();
+        bool CanBeStolen();
         /// <summary>
         /// When player has to select cards to destroy, can destroy this bonus from the playing field?
         /// </summary>
         /// <returns></returns>
-        public abstract bool CanBeDestroyed();
+        bool CanBeDestroyed();
         /// <summary>
         /// When player has to discard cards, can instead destroy this bonus from the playing field?
         /// </summary>
         /// <returns></returns>
-        public abstract bool CanBeDiscarded();
+        bool CanBeDiscarded();
     }
 }

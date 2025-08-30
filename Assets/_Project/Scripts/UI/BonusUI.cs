@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +9,10 @@ namespace cg
     public class BonusUI : MonoBehaviour
     {
         [SerializeField] private Image bonusImage;
-        [SerializeField] private TMP_Text quantityLabel;
         [SerializeField] private Button selectButton;
 
-        public System.Action<BonusUI, BaseBonus> onClickSelect;
-        private BaseBonus bonus;
+        public System.Action<BonusUI, BaseCard> onClickSelect;
+        private BaseCard card;
 
         void Awake()
         {
@@ -28,18 +26,18 @@ namespace cg
 
         private void OnClickSelect()
         {
-            onClickSelect?.Invoke(this, bonus);
+            onClickSelect?.Invoke(this, card);
         }
 
         /// <summary>
         /// Update graphic values
         /// </summary>
         /// <param name="bonus"></param>
-        public void Init(BaseBonus bonus)
+        public void Init(BaseCard card)
         {
-            this.bonus = bonus;
+            this.card = card;
+            IBonusCard bonus = card as IBonusCard;
             bonusImage.sprite = bonus.Icon;
-            quantityLabel.text = $"x{bonus.Quantity}";
         }
     }
 }

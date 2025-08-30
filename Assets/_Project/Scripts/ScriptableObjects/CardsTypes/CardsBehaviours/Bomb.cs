@@ -82,9 +82,9 @@ namespace cg
             for (int i = 0; i < NumberLifesToRemove; i++)
             {
                 //if has extra lifes, remove it
-                if (loserPlayer.HasBonus(typeof(LifeExtraBonus), out _))
+                if (loserPlayer.HasBonus(typeof(LifeExtra)))
                 {
-                    loserPlayer.DecreaseBonus(typeof(LifeExtraBonus), 1);
+                    loserPlayer.RemoveBonus(typeof(LifeExtra), 1);
                 }
                 //else, remove life card
                 else

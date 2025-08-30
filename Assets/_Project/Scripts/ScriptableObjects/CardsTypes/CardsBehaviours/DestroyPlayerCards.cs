@@ -16,7 +16,7 @@ namespace cg
 
         private int selectedPlayerIndex;
         protected BaseCard selectedCard;
-        protected BaseBonus selectedBonus;
+        protected BaseCard selectedBonus;
 
         public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
         {
@@ -110,7 +110,7 @@ namespace cg
             //show selected player cards and bonus
             PlayerLogic attackedPlayer = CardGameManager.instance.Players[attackedPlayerIndex];
             bool attackedIsRealPlayer = CardGameManager.instance.IsRealPlayer(attackedPlayerIndex);
-            CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: false);
+            CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
             CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
             CardGameUIManager.instance.ShowAdversaryCardsAndBonus(true);
             CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
@@ -147,19 +147,22 @@ namespace cg
         protected virtual IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
             //be sure there are cards or bonus to select
-            if (HasBonusOrCardsToSelect(attackedPlayer, out List<BaseBonus> possibleBonus, out List<BaseCard> possibleCards))
+            if (HasBonusOrCardsToSelect(attackedPlayer, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards))
             {
                 CardGameUIManager.instance.UpdateInfoLabel($"There aren't other cards or bonus to select from player {attackedPlayerIndex + 1}");
                 yield return new WaitForSeconds(LOW_DELAY);
                 yield break;
             }
 
-            //if the attacker is a player, wait for him to select card or bonus to attack
+            var attackedCards = attackedIsRealPlayer ? CardGameUIManager.instance.playerCardsInScene : CardGameUIManager.instance.adversaryCardsInScene;
+            var attackedBonus = attackedIsRealPlayer ? CardGameUIManager.instance.playerBonusInScene : CardGameUIManager.instance.adversaryBonusInScene;
+
+            //if current is a player, wait for him to select card or bonus to attack
             if (currentIsRealPlayer)
             {
-                foreach (var keypair in CardGameUIManager.instance.adversaryCardsInScene)
+                foreach (var keypair in attackedCards)
                     keypair.Value.onClickSelect += OnSelectCardToDestroy;
-                foreach (var keypair in CardGameUIManager.instance.adversaryBonusInScene)
+                foreach (var keypair in attackedBonus)
                     keypair.Value.onClickSelect += OnSelectBonusToDestroy;
 
                 CardGameUIManager.instance.UpdateInfoLabel("Select one card or bonus to attack...");
@@ -167,9 +170,9 @@ namespace cg
                 selectedBonus = null;
                 yield return new WaitUntil(() => selectedCard != null || selectedBonus != null);
 
-                foreach (var keypair in CardGameUIManager.instance.adversaryCardsInScene)
+                foreach (var keypair in attackedCards)
                     keypair.Value.onClickSelect -= OnSelectCardToDestroy;
-                foreach (var keypair in CardGameUIManager.instance.adversaryBonusInScene)
+                foreach (var keypair in attackedBonus)
                     keypair.Value.onClickSelect -= OnSelectBonusToDestroy;
             }
             //if adversary, just select one random bonus or card
@@ -184,17 +187,23 @@ namespace cg
             //if card, show it
             if (selectedCard)
             {
-                CardGameUIManager.instance.adversaryCardsInScene[selectedCard].ShowFrontOrBack(showFront: true);
+                if (attackedIsRealPlayer)
+                {
+                    //rotate just to understand the selected card on the player
+                    attackedCards[selectedCard].ShowFrontOrBack(showFront: false);
+                    yield return new WaitForSeconds(LOW_DELAY);
+                }
+                attackedCards[selectedCard].ShowFrontOrBack(showFront: true);
                 yield return new WaitForSeconds(LOW_DELAY);
 
                 //destroy card
                 CardGameManager.instance.DiscardCard(attackedPlayerIndex, selectedCard);
-                CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: false);
+                CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
             }
             //else remove bonus
             else
             {
-                attackedPlayer.DecreaseBonus(selectedBonus.GetType(), quantity: 1);
+                attackedPlayer.RemoveBonus(selectedBonus.GetType(), quantity: 1);
                 CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
             }
         }
@@ -228,9 +237,10 @@ namespace cg
             selectedCard = card;
         }
 
-        private void OnSelectBonusToDestroy(BonusUI bonusUI, BaseBonus bonus)
+        private void OnSelectBonusToDestroy(BonusUI bonusUI, BaseCard card)
         {
             //be sure bonus can be attacked
+            IBonusCard bonus = card as IBonusCard;
             if (bonus.CanBeDestroyed() == false)
             {
                 CardGameUIManager.instance.UpdateInfoLabel("Can't select this bonus. Please, select another card or bonus to attack...");
@@ -238,17 +248,18 @@ namespace cg
             }
 
             //set selected bonus
-            selectedBonus = bonus;
+            selectedBonus = card;
         }
 
-        private bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseBonus> possibleBonus, out List<BaseCard> possibleCards)
+        private bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
         {
             //possible selections
-            possibleBonus = new List<BaseBonus>();
-            foreach (var bonus in player.ActiveBonus)
+            possibleBonus = new List<BaseCard>();
+            foreach (var card in player.ActiveBonus)
             {
+                IBonusCard bonus = card as IBonusCard;
                 if (bonus.CanBeDestroyed())
-                    possibleBonus.Add(bonus);
+                    possibleBonus.Add(card);
             }
             possibleCards = new List<BaseCard>();
             foreach (var card in player.CardsInHands)

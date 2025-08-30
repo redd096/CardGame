@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace cg
@@ -17,11 +16,19 @@ namespace cg
         {
             yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
-            //if destroyed correct card type, destroy again one card
-            if (selectedCard != null && selectedCard.CardType == TypeCardsToStealInsteadOfDestroy
-                || selectedBonus != null && selectedBonus.BonusCardType == TypeCardsToStealInsteadOfDestroy)
+            PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
+
+            //if destroyed correct card type, steal instead of destroy
+            if (selectedCard != null && selectedCard.CardType == TypeCardsToStealInsteadOfDestroy)
             {
-                Debug.LogError("TODO - INSTEAD OF CALL DISCARD, SHOULD STEAL THE SELECTED CARD OR BONUS");
+                BaseCard destroyedCard = CardGameManager.instance.DiscardsDeck.Pop();
+                currentPlayer.CardsInHands.Add(destroyedCard);
+                CardGameUIManager.instance.SetCards(currentIsRealPlayer, currentPlayer.CardsInHands.ToArray(), showFront: currentIsRealPlayer);
+            }
+            else if (selectedBonus != null && selectedBonus.CardType == TypeCardsToStealInsteadOfDestroy)
+            {
+                currentPlayer.AddBonus(selectedBonus);
+                CardGameUIManager.instance.SetBonus(currentIsRealPlayer, currentPlayer.ActiveBonus.ToArray());
             }
         }
     }
