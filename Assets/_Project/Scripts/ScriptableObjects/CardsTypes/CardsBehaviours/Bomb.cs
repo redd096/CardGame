@@ -77,7 +77,7 @@ namespace cg
 
             //the lower, lose life
             PlayerLogic loserPlayer = players[loserPlayerIndex];
-            bool loserIsPlayer = CardGameManager.instance.IsRealPlayer(loserPlayerIndex);
+            bool loserIsRealPlayer = CardGameManager.instance.IsRealPlayer(loserPlayerIndex);
 
             for (int i = 0; i < NumberLifesToRemove; i++)
             {
@@ -94,10 +94,10 @@ namespace cg
                 }
 
                 //update ui
-                if (loserIsPlayer)
+                if (loserIsRealPlayer)
                 {
-                    CardGameUIManager.instance.SetBonus(isPlayer: true, loserPlayer.ActiveBonus.ToArray());
-                    CardGameUIManager.instance.SetCards(isPlayer: true, loserPlayer.CardsInHands.ToArray());
+                    CardGameUIManager.instance.SetBonus(isRealPlayer: true, loserPlayer.ActiveBonus.ToArray());
+                    CardGameUIManager.instance.SetCards(isRealPlayer: true, loserPlayer.CardsInHands.ToArray());
                     yield return new WaitForSeconds(1f);
                 }
 

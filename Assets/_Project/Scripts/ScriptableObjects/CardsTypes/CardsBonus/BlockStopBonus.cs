@@ -8,7 +8,7 @@ namespace cg
     /// </summary>
     public class BlockStopBonus : BaseBonus
     {
-        public BlockStopBonus(Sprite icon, int quantity, bool isPlayer, int playerIndex, System.Action<int> onStartTurn) : base(icon, quantity)
+        public BlockStopBonus(Sprite icon, int quantity, bool isRealPlayer, int playerIndex, System.Action<int> onStartTurn) : base(icon, quantity)
         {
             onStartTurn += (index) =>
             {
@@ -20,7 +20,7 @@ namespace cg
 
                     //and update ui
                     PlayerLogic player = CardGameManager.instance.Players[playerIndex];
-                    CardGameUIManager.instance.SetBonus(isPlayer, player.ActiveBonus.ToArray());
+                    CardGameUIManager.instance.SetBonus(isRealPlayer, player.ActiveBonus.ToArray());
                 }
             };
         }

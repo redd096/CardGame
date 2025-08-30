@@ -20,7 +20,7 @@ namespace cg
             //set player cards in ui
             currentPlayer = CardGameManager.instance.GetCurrentPlayer();
             List<BaseCard> playerCards = currentPlayer.CardsInHands;
-            uiCards = CardGameUIManager.instance.SetCards(isPlayer: true, playerCards.ToArray());
+            uiCards = CardGameUIManager.instance.SetCards(isRealPlayer: true, playerCards.ToArray());
 
             //and register to cards events
             foreach (var keypair in uiCards)
@@ -62,7 +62,7 @@ namespace cg
             {
                 //discard card and update ui
                 CardGameManager.instance.DiscardCard(CardGameManager.instance.currentPlayer, card);
-                CardGameUIManager.instance.SetCards(isPlayer: true, currentPlayer.CardsInHands.ToArray());
+                CardGameUIManager.instance.SetCards(isRealPlayer: true, currentPlayer.CardsInHands.ToArray());
 
                 //cycle card behaviours
                 if (card is GenericCard genericCard)

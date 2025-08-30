@@ -32,7 +32,7 @@ namespace cg
             List<BaseCard> cardsToPlay = StateMachine.CardsToPlayOnDraw;
             int playerIndex = CardGameManager.instance.currentPlayer;
             PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
-            bool isPlayer = CardGameManager.instance.IsRealPlayer(playerIndex);
+            bool isRealPlayer = CardGameManager.instance.IsRealPlayer(playerIndex);
 
             //cycle cards that have behaviours to play on draw
             for (int i = 0; i < cardsToPlay.Count; i++)
@@ -42,7 +42,7 @@ namespace cg
                 {
                     //discard card and update ui
                     CardGameManager.instance.DiscardCard(CardGameManager.instance.currentPlayer, genericCard);
-                    CardGameUIManager.instance.SetCards(isPlayer, currentPlayer.CardsInHands.ToArray());
+                    CardGameUIManager.instance.SetCards(isRealPlayer, currentPlayer.CardsInHands.ToArray());
 
                     //cycle behaviours
                     for (int j = 0; j < behaviours.Count; j++)
@@ -54,7 +54,7 @@ namespace cg
             }
 
             //move to player or adversary state
-            StateMachine.SetState(isPlayer ? StateMachine.PlayerTurnState : StateMachine.AdversaryTurnState);
+            StateMachine.SetState(isRealPlayer ? StateMachine.PlayerTurnState : StateMachine.AdversaryTurnState);
         }
     }
 }

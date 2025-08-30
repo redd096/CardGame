@@ -49,12 +49,12 @@ namespace cg
             //foreach player
             for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++)
             {
-                bool isPlayer = CardGameManager.instance.IsRealPlayer(playerIndex);
+                bool isRealPlayer = CardGameManager.instance.IsRealPlayer(playerIndex);
 
                 for (int cardIndex = 0; cardIndex < rules.StartCards; cardIndex++)
                 {
                     //animation delay
-                    if (isPlayer)
+                    if (isRealPlayer)
                         yield return new WaitForSeconds(DELAY_BETWEEN_PLAYER_CARDS);
 
                     //draw life cards, then any cards
@@ -64,7 +64,7 @@ namespace cg
                         CardGameManager.instance.DrawNextCard(playerIndex);
 
                     //update ui
-                    CardGameUIManager.instance.SetCards(isPlayer, CardGameManager.instance.Players[playerIndex].CardsInHands.ToArray());
+                    CardGameUIManager.instance.SetCards(isRealPlayer, CardGameManager.instance.Players[playerIndex].CardsInHands.ToArray());
                 }
             }
 

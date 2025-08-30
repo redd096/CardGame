@@ -25,15 +25,15 @@ namespace cg
             yield return Execute(false);
         }
 
-        private IEnumerator Execute(bool isPlayer)
+        private IEnumerator Execute(bool isRealPlayer)
         {
             //set block for x turns
             int playerIndex = CardGameManager.instance.currentPlayer;
             PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();
-            player.AddBonus(new BlockStopBonus(bonusSprite, NumberOfTurns, isPlayer, playerIndex, CardGameManager.instance.OnStartTurn));
+            player.AddBonus(new BlockStopBonus(bonusSprite, NumberOfTurns, isRealPlayer, playerIndex, CardGameManager.instance.OnStartTurn));
 
             //update ui
-            CardGameUIManager.instance.SetBonus(isPlayer, player.ActiveBonus.ToArray());
+            CardGameUIManager.instance.SetBonus(isRealPlayer, player.ActiveBonus.ToArray());
 
             //update infos
             BaseBonus bonus = player.GetBonus(typeof(BlockStopBonus));
