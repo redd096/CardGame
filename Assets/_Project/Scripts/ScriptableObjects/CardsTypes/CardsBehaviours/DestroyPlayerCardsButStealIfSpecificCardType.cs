@@ -12,17 +12,17 @@ namespace cg
         [Space]
         public ECardType TypeCardsToStealInsteadOfDestroy;
 
-        protected override IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
+        protected override IEnumerator SelectOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
-            yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
+            yield return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
             PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
 
             //if destroyed correct card type, steal instead of destroy
             if (selectedCard != null && selectedCard.CardType == TypeCardsToStealInsteadOfDestroy)
             {
-                BaseCard destroyedCard = CardGameManager.instance.DiscardsDeck.Pop();
-                currentPlayer.CardsInHands.Add(destroyedCard);
+                CardGameManager.instance.DiscardsDeck.Pop();
+                currentPlayer.CardsInHands.Add(selectedCard);
                 CardGameUIManager.instance.SetCards(currentIsRealPlayer, currentPlayer.CardsInHands.ToArray(), showFront: currentIsRealPlayer);
             }
             else if (selectedBonus != null && selectedBonus.CardType == TypeCardsToStealInsteadOfDestroy)

@@ -14,7 +14,7 @@ namespace cg
         [Min(1)] public int NumberOfCards = 1;
         public ETargetCard TargetCard;
 
-        private int selectedPlayerIndex;
+        protected int selectedPlayerIndex;
         protected BaseCard selectedCard;
         protected BaseCard selectedBonus;
 
@@ -33,7 +33,7 @@ namespace cg
             return TargetCard.AsGenericTarget();
         }
 
-        private IEnumerator Execute(bool isRealPlayer)
+        protected IEnumerator Execute(bool isRealPlayer)
         {
             PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
             int currentPlayerIndex = CardGameManager.instance.currentPlayer;
@@ -50,8 +50,15 @@ namespace cg
 
                         CardGameUIManager.instance.UpdateInfoLabel("Select one player to attack...");
                         selectedPlayerIndex = -1;
-                        yield return new WaitUntil(() => selectedPlayerIndex > -1);
 
+                        while (true)
+                        {
+                            int temp = selectedPlayerIndex;
+                            yield return new WaitUntil(() => selectedPlayerIndex != temp);
+                            ShowPlayerCards(selectedPlayerIndex);
+                            
+                        }
+                        
                         foreach (var keypair in CardGameUIManager.instance.playersInScene)
                             keypair.Value.onClickSelect -= OnSelectPlayer;
                     }
@@ -69,7 +76,7 @@ namespace cg
 
                     //attack selected player
                     currentPlayer.LastSelectedPlayers.Add(selectedPlayerIndex);
-                    yield return AttackOnePlayer(isRealPlayer, selectedPlayerIndex);
+                    yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, selectedPlayerIndex);
                     yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
                     break;
                 case ETargetCard.EveryOtherPlayer:
@@ -78,7 +85,7 @@ namespace cg
                     {
                         if (CanSelectPlayer(currentPlayerIndex, i))
                         {
-                            yield return AttackOnePlayer(isRealPlayer, i);
+                            yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, i);
                             yield return new WaitForSeconds(LOW_DELAY);
                         }
                     }
@@ -90,7 +97,7 @@ namespace cg
                     {
                         if (CanSelectPlayer(currentPlayerIndex, i) && currentPlayer.LastSelectedPlayers.Contains(i) == false)
                         {
-                            yield return AttackOnePlayer(isRealPlayer, i);
+                            yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, i);
                             yield return new WaitForSeconds(LOW_DELAY);
                         }
                     }
@@ -101,10 +108,24 @@ namespace cg
 
         #region private API
 
-        private IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int attackedPlayerIndex)
+        private void ShowPlayerCards(int attackedPlayerIndex)
+        {
+            //show selected player cards and bonus
+            PlayerLogic attackedPlayer = CardGameManager.instance.Players[attackedPlayerIndex];
+            bool attackedIsRealPlayer = CardGameManager.instance.IsRealPlayer(attackedPlayerIndex);
+            CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
+            CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
+            CardGameUIManager.instance.ShowAdversaryCardsAndBonus(true);
+            CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
+
+        }
+
+        /// <summary>
+        /// When a player is selected, attack its cards or bonus
+        /// </summary>
+        protected IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int currentPlayerIndex, int attackedPlayerIndex)
         {
             //update infos
-            int currentPlayerIndex = CardGameManager.instance.currentPlayer;
             CardGameUIManager.instance.UpdateInfoLabel($"Player {currentPlayerIndex + 1} is attacking Player {attackedPlayerIndex + 1}");
 
             //show selected player cards and bonus
@@ -127,7 +148,7 @@ namespace cg
                     break;
                 }
 
-                yield return AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
+                yield return SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
                 //if player is dead, it's useless to continue destroy cards
                 if (attackedPlayer.IsAlive() == false)
@@ -144,7 +165,10 @@ namespace cg
             }
         }
 
-        protected virtual IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
+        /// <summary>
+        /// Select one card or bonus to attack
+        /// </summary>
+        protected virtual IEnumerator SelectOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
             //be sure there are cards or bonus to select
             if (HasBonusOrCardsToSelect(attackedPlayer, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards))
@@ -154,8 +178,8 @@ namespace cg
                 yield break;
             }
 
-            var attackedCards = attackedIsRealPlayer ? CardGameUIManager.instance.playerCardsInScene : CardGameUIManager.instance.adversaryCardsInScene;
-            var attackedBonus = attackedIsRealPlayer ? CardGameUIManager.instance.playerBonusInScene : CardGameUIManager.instance.adversaryBonusInScene;
+            Dictionary<BaseCard, CardUI> attackedCards = attackedIsRealPlayer ? CardGameUIManager.instance.playerCardsInScene : CardGameUIManager.instance.adversaryCardsInScene;
+            Dictionary<BaseCard, BonusUI> attackedBonus = attackedIsRealPlayer ? CardGameUIManager.instance.playerBonusInScene : CardGameUIManager.instance.adversaryBonusInScene;
 
             //if current is a player, wait for him to select card or bonus to attack
             if (currentIsRealPlayer)
@@ -184,6 +208,14 @@ namespace cg
                     selectedCard = possibleCards[Random.Range(0, possibleCards.Count)];
             }
 
+            yield return AttackOneCardOrBonus(attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer, attackedCards);
+        }
+
+        /// <summary>
+        /// When a card is selected, apply behaviour to it
+        /// </summary>
+        protected IEnumerator AttackOneCardOrBonus(PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer, Dictionary<BaseCard, CardUI> attackedCards)
+        {
             //if card, show it
             if (selectedCard)
             {
@@ -208,7 +240,7 @@ namespace cg
             }
         }
 
-        private void OnSelectPlayer(PlayerUI playerUI, int clickedPlayerIndex)
+        protected void OnSelectPlayer(PlayerUI playerUI, int clickedPlayerIndex)
         {
             //be sure player can be selected
             int currentPlayerIndex = CardGameManager.instance.currentPlayer;
@@ -222,7 +254,7 @@ namespace cg
             selectedPlayerIndex = clickedPlayerIndex;
         }
 
-        private bool CanSelectPlayer(int currentPlayerIndex, int playerIndexToSelect)
+        protected bool CanSelectPlayer(int currentPlayerIndex, int playerIndexToSelect)
         {
             //ignore self or dead players
             PlayerLogic playerToSelect = CardGameManager.instance.Players[playerIndexToSelect];
@@ -231,13 +263,13 @@ namespace cg
             return true;
         }
 
-        private void OnSelectCardToDestroy(CardUI cardUI, BaseCard card)
+        protected void OnSelectCardToDestroy(CardUI cardUI, BaseCard card)
         {
             //set selected card
             selectedCard = card;
         }
 
-        private void OnSelectBonusToDestroy(BonusUI bonusUI, BaseCard card)
+        protected void OnSelectBonusToDestroy(BonusUI bonusUI, BaseCard card)
         {
             //be sure bonus can be attacked
             IBonusCard bonus = card as IBonusCard;
@@ -251,7 +283,7 @@ namespace cg
             selectedBonus = card;
         }
 
-        private bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
+        protected virtual bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
         {
             //possible selections
             possibleBonus = new List<BaseCard>();

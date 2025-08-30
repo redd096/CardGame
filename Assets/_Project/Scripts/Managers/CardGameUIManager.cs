@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using redd096;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace cg
 {
@@ -27,6 +29,10 @@ namespace cg
         [SerializeField] private GameObject adversaryObj;
         [SerializeField] private TMP_Text infoLabel;
         [SerializeField] private CardTypeColors colorCardTypes;
+        [Space]
+        [SerializeField] private GameObject popupObj;
+        [SerializeField] private Button noButton;
+        [SerializeField] private Button yesButton;
 
         public Dictionary<int, PlayerUI> playersInScene = new Dictionary<int, PlayerUI>();
         public Dictionary<BaseCard, CardUI> playerCardsInScene = new Dictionary<BaseCard, CardUI>();
@@ -46,7 +52,30 @@ namespace cg
             SetBonus(false, null);
             ShowAdversaryCardsAndBonus(false);
             UpdateInfoLabel("");
+
+            //register events
+            yesButton.onClick.AddListener(OnClickYesPopup);
+            noButton.onClick.AddListener(OnClickNoPopup);
         }
+
+        private void ODestroy()
+        {
+            //unregister events
+            yesButton.onClick.RemoveListener(OnClickYesPopup);
+            noButton.onClick.RemoveListener(OnClickNoPopup);
+        }
+
+        #region events
+
+        private void OnClickYesPopup()
+        {
+        }
+
+        private void OnClickNoPopup()
+        {
+        }
+
+        #endregion
 
         /// <summary>
         /// Show loading or game panel

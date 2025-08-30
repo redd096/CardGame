@@ -12,15 +12,15 @@ namespace cg
         [Space]
         public ECardType TypeCardsToDestroyAgain;
 
-        protected override IEnumerator AttackOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
+        protected override IEnumerator SelectOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
-            yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
+            yield return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
             //if destroyed correct card type, destroy again one card
             if (selectedCard != null && selectedCard.CardType == TypeCardsToDestroyAgain
                 || selectedBonus != null && selectedBonus.CardType == TypeCardsToDestroyAgain)
             {
-                yield return base.AttackOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
+                yield return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
             }
         }
     }
