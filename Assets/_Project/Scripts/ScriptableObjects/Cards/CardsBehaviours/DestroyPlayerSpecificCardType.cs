@@ -13,6 +13,28 @@ namespace cg
         [Space]
         public ECardType TypeCardsToDestroy;
 
+        protected override bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
+        {
+            // return base.HasBonusOrCardsToSelect(player, out possibleBonus, out possibleCards);
+
+            //possible selections
+            possibleBonus = new List<BaseCard>();
+            foreach (var card in player.ActiveBonus)
+            {
+                IBonusCard bonus = card as IBonusCard;
+                if (bonus.CanBeDestroyed() && card.CardType == TypeCardsToDestroy)  //only specific type
+                    possibleBonus.Add(card);
+            }
+            possibleCards = new List<BaseCard>();
+            foreach (var card in player.CardsInHands)
+            {
+                if (card.CardType == TypeCardsToDestroy)                            //only specific type
+                    possibleCards.Add(card);
+            }
+
+            return possibleBonus.Count > 0 || possibleCards.Count > 0;
+        }
+
         protected override IEnumerator SelectOneCardOrBonus(bool currentIsRealPlayer, PlayerLogic attackedPlayer, int attackedPlayerIndex, bool attackedIsRealPlayer)
         {
             // return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
@@ -35,28 +57,6 @@ namespace cg
                 selectedCard = possibleCards[Random.Range(0, possibleCards.Count)];
 
             yield return AttackOneCardOrBonus(attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer, attackedCards);
-        }
-
-        protected override bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
-        {
-            // return base.HasBonusOrCardsToSelect(player, out possibleBonus, out possibleCards);
-
-            //possible selections
-            possibleBonus = new List<BaseCard>();
-            foreach (var card in player.ActiveBonus)
-            {
-                IBonusCard bonus = card as IBonusCard;
-                if (bonus.CanBeDestroyed() && card.CardType == TypeCardsToDestroy)  //only specific type
-                    possibleBonus.Add(card);
-            }
-            possibleCards = new List<BaseCard>();
-            foreach (var card in player.CardsInHands)
-            {
-                if (card.CardType == TypeCardsToDestroy)                            //only specific type
-                    possibleCards.Add(card);
-            }
-
-            return possibleBonus.Count > 0 || possibleCards.Count > 0;
         }
     }
 }

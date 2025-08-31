@@ -16,6 +16,7 @@ namespace cg
 
         public Deck Deck { get; set; }
         public List<PlayerLogic> Players { get; set; } = new List<PlayerLogic>();
+        public List<PlayerLogic> StillActivePlayers => Players.FindAll(x => x.IsAlive());
         public int currentPlayer { get; private set; }
         public Stack<BaseCard> DiscardsDeck { get; set; } = new Stack<BaseCard>();
 
@@ -138,6 +139,14 @@ namespace cg
         public PlayerLogic GetRealPlayer()
         {
             return Players[0];
+        }
+
+        /// <summary>
+        /// Update rules to know which players are alive and which not
+        /// </summary>
+        public void UpdateAlivePlayers()
+        {
+            Rules.UpdatePlayersCount(Players.Count, StillActivePlayers.Count);
         }
     }
 }

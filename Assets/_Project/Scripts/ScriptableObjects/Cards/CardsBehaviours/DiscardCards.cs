@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using redd096.Attributes;
 using UnityEngine;
 
 namespace cg
 {
     /// <summary>
-    /// Destroy X cards to other players
+    /// Players discard X cards
     /// </summary>
     [System.Serializable]
-    public class DestroyPlayerCards : BaseCardBehaviour
+    public class DiscardCards : BaseCardBehaviour
     {
         [Space]
         [Min(1)] public int NumberOfCards = 1;
-        public ETargetCard TargetCard;
+        public EDiscardTarget TargetCard;
+        [Tooltip("Numbers are calculated for a game with 2 players. When number of players increments, increment also numbers of cards")] public bool IncreaseWithNumberOfPlayers;
+        [EnableIf(nameof(IncreaseWithNumberOfPlayers))][Min(1)] public int NumberIncrement = 1;
+        public int CorrectNumberOfCards => NumberOfCards + (IncreaseWithNumberOfPlayers ? NumberIncrement * Mathf.Max(CardGameManager.instance.StillActivePlayers.Count - 2, 0) : 0);
 
         protected int selectedPlayerIndex;
         protected BaseCard selectedCard;
@@ -25,86 +29,26 @@ namespace cg
 
         public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
-            PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
+            //select targets
+            var selectTargetHelper = new BehaviourSelectTargetHelper(this);
+            yield return selectTargetHelper.SelectPlayersToAttack(isRealPlayer);
+
+            //attack every target
             int currentPlayerIndex = CardGameManager.instance.currentPlayer;
-            List<PlayerLogic> players = CardGameManager.instance.Players;
-
-            switch (TargetCard)
+            for (int i = 0; i < selectTargetHelper.selectedPlayers.Count; i++)
             {
-                case ETargetCard.ChooseOnePlayer:
-                    //if this is the player, wait for him to select a player
-                    if (isRealPlayer)
-                    {
-                        CardGameUIManager.instance.UpdateInfoLabel("Select one player to attack...");
+                int targetIndex = selectTargetHelper.selectedPlayers[i];
+                yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, targetIndex);
 
-                        while (true)
-                        {
-                            foreach (var keypair in CardGameUIManager.instance.playersInScene)
-                                keypair.Value.onClickSelect += OnSelectPlayer;
-
-                            //wait user to select one target and show his cards
-                            selectedPlayerIndex = -1;
-                            yield return new WaitUntil(() => selectedPlayerIndex > -1);
-                            ShowPlayerCards(selectedPlayerIndex);
-
-                            foreach (var keypair in CardGameUIManager.instance.playersInScene)
-                                keypair.Value.onClickSelect -= OnSelectPlayer;
-
-                            //wait user to click on popup
-                            byte popupSelection = 0;
-                            CardGameUIManager.instance.ShowPopup(true, onClickYes: () => popupSelection = 1, onClickNo: () => popupSelection = 2);
-                            yield return new WaitUntil(() => popupSelection > 0);
-
-                            //if pressed yes, continue coroutine with selected target
-                            if (popupSelection == 1)
-                                break;
-                        }                        
-                    }
-                    //for adversary, just select one player random
-                    else
-                    {
-                        List<int> possiblePlayers = new List<int>();
-                        for (int i = 0; i < players.Count; i++)
-                        {
-                            if (CanSelectPlayer(currentPlayerIndex, i))
-                                possiblePlayers.Add(i);
-                        }
-                        selectedPlayerIndex = possiblePlayers[Random.Range(0, possiblePlayers.Count)];
-                    }
-
-                    //attack selected player
-                    currentPlayer.LastSelectedPlayers.Add(selectedPlayerIndex);
-                    yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, selectedPlayerIndex);
-                    yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
-                    break;
-                case ETargetCard.EveryOtherPlayer:
-                    //attack every player
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        if (CanSelectPlayer(currentPlayerIndex, i))
-                        {
-                            yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, i);
-                            yield return new WaitForSeconds(LOW_DELAY);
-                        }
-                    }
-                    yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
-                    break;
-                case ETargetCard.EveryOtherPlayerExceptPreviouslyChoosedOne:
-                    //attack every player not already selected in previous behaviours
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        if (CanSelectPlayer(currentPlayerIndex, i) && currentPlayer.LastSelectedPlayers.Contains(i) == false)
-                        {
-                            yield return AttackOnePlayer(isRealPlayer, currentPlayerIndex, i);
-                            yield return new WaitForSeconds(LOW_DELAY);
-                        }
-                    }
-                    yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
-                    break;
+                //delay between targets (not if this is the last one)
+                 if (i < selectTargetHelper.selectedPlayers.Count - 1)
+                    yield return new WaitForSeconds(LOW_DELAY);
             }
+
+            yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
         }
 
-        #region private API
+        #region utils
 
         private void ShowPlayerCards(int attackedPlayerIndex)
         {
@@ -115,8 +59,52 @@ namespace cg
             CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
             CardGameUIManager.instance.ShowAdversaryCardsAndBonus(true);
             CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
-
         }
+
+        protected virtual bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
+        {
+            //possible selections
+            possibleBonus = new List<BaseCard>();
+            foreach (var card in player.ActiveBonus)
+            {
+                IBonusCard bonus = card as IBonusCard;
+                if (bonus.CanBeDestroyed())
+                    possibleBonus.Add(card);
+            }
+            possibleCards = new List<BaseCard>();
+            foreach (var card in player.CardsInHands)
+                possibleCards.Add(card);
+
+            return possibleBonus.Count > 0 || possibleCards.Count > 0;
+        }
+
+        #endregion
+
+        #region events
+
+        protected void OnSelectCardToDestroy(CardUI cardUI, BaseCard card)
+        {
+            //set selected card
+            selectedCard = card;
+        }
+
+        protected void OnSelectBonusToDestroy(BonusUI bonusUI, BaseCard card)
+        {
+            //be sure bonus can be attacked
+            IBonusCard bonus = card as IBonusCard;
+            if (bonus.CanBeDestroyed() == false)
+            {
+                CardGameUIManager.instance.UpdateInfoLabel("Can't select this bonus. Please, select another card or bonus to attack...");
+                return;
+            }
+
+            //set selected bonus
+            selectedBonus = card;
+        }
+
+        #endregion
+
+        #region private API
 
         /// <summary>
         /// When a player is selected, attack its cards or bonus
@@ -129,14 +117,11 @@ namespace cg
             //show selected player cards and bonus
             PlayerLogic attackedPlayer = CardGameManager.instance.Players[attackedPlayerIndex];
             bool attackedIsRealPlayer = CardGameManager.instance.IsRealPlayer(attackedPlayerIndex);
-            CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
-            CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
-            CardGameUIManager.instance.ShowAdversaryCardsAndBonus(true);
-            CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
+            ShowPlayerCards(attackedPlayerIndex);
 
             yield return new WaitForSeconds(LOW_DELAY);
 
-            for (int i = 0; i < NumberOfCards; i++)
+            for (int i = 0; i < CorrectNumberOfCards; i++)
             {
                 //be sure there are cards or bonus to select
                 if (HasBonusOrCardsToSelect(attackedPlayer, out _, out _))
@@ -150,7 +135,10 @@ namespace cg
 
                 //if player is dead, it's useless to continue destroy cards
                 if (attackedPlayer.IsAlive() == false)
+                {
+                    CardGameManager.instance.UpdateAlivePlayers();
                     break;
+                }
             }
 
             //update UI
@@ -236,66 +224,6 @@ namespace cg
                 attackedPlayer.RemoveBonus(selectedBonus.GetType(), quantity: 1);
                 CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
             }
-        }
-
-        protected void OnSelectPlayer(PlayerUI playerUI, int clickedPlayerIndex)
-        {
-            //be sure player can be selected
-            int currentPlayerIndex = CardGameManager.instance.currentPlayer;
-            if (CanSelectPlayer(currentPlayerIndex, clickedPlayerIndex) == false)
-            {
-                CardGameUIManager.instance.UpdateInfoLabel("Can't select this player. Please, select another player to attack...");
-                return;
-            }
-
-            //set selected player
-            selectedPlayerIndex = clickedPlayerIndex;
-        }
-
-        protected bool CanSelectPlayer(int currentPlayerIndex, int playerIndexToSelect)
-        {
-            //ignore self or dead players
-            PlayerLogic playerToSelect = CardGameManager.instance.Players[playerIndexToSelect];
-            if (playerIndexToSelect == currentPlayerIndex || playerToSelect.IsAlive() == false)
-                return false;
-            return true;
-        }
-
-        protected void OnSelectCardToDestroy(CardUI cardUI, BaseCard card)
-        {
-            //set selected card
-            selectedCard = card;
-        }
-
-        protected void OnSelectBonusToDestroy(BonusUI bonusUI, BaseCard card)
-        {
-            //be sure bonus can be attacked
-            IBonusCard bonus = card as IBonusCard;
-            if (bonus.CanBeDestroyed() == false)
-            {
-                CardGameUIManager.instance.UpdateInfoLabel("Can't select this bonus. Please, select another card or bonus to attack...");
-                return;
-            }
-
-            //set selected bonus
-            selectedBonus = card;
-        }
-
-        protected virtual bool HasBonusOrCardsToSelect(PlayerLogic player, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards)
-        {
-            //possible selections
-            possibleBonus = new List<BaseCard>();
-            foreach (var card in player.ActiveBonus)
-            {
-                IBonusCard bonus = card as IBonusCard;
-                if (bonus.CanBeDestroyed())
-                    possibleBonus.Add(card);
-            }
-            possibleCards = new List<BaseCard>();
-            foreach (var card in player.CardsInHands)
-                possibleCards.Add(card);
-
-            return possibleBonus.Count > 0 || possibleCards.Count > 0;
         }
 
         #endregion

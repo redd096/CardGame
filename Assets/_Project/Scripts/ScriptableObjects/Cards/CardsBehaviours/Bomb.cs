@@ -28,7 +28,7 @@ namespace cg
         public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             List<PlayerLogic> players = CardGameManager.instance.Players;
-            int numberActivePlayers = players.FindAll(x => x.IsAlive()).Count;  //only active players
+            int numberActivePlayers = CardGameManager.instance.StillActivePlayers.Count;    //only active players
             int playerIndex = CardGameManager.instance.currentPlayer;
             int loserPlayerIndex = -1;
 
@@ -98,7 +98,10 @@ namespace cg
 
                 //if dead, doesn't need to continue remove lifes
                 if (loserPlayer.IsAlive() == false)
+                {
+                    CardGameManager.instance.UpdateAlivePlayers();
                     break;
+                }
             }
 
             //update ui

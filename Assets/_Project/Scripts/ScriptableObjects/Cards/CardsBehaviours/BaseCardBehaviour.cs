@@ -9,10 +9,12 @@ namespace cg
     [System.Serializable]
     public abstract class BaseCardBehaviour
     {
+        //consts
         public const float DELAY_AFTER_BEHAVIOUR = 2f;
         public const float LOW_DELAY = 1f;
         public const float BIG_DELAY = 2f;
 
+        //inspector
         public ECardBehaviourSequenceType SequenceType;
 
         public abstract EGenericTarget GetGenericTargetCard();
