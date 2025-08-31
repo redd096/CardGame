@@ -696,6 +696,9 @@ MonoBehaviour:
   adversaryObj: {fileID: 1313191241}
   infoLabel: {fileID: 893378482}
   colorCardTypes: {fileID: 11400000, guid: a9f0f30d1a42095e3bf5fe7819212570, type: 2}
+  popupObj: {fileID: 781669767}
+  noButton: {fileID: 1044659310}
+  yesButton: {fileID: 1888718862}
 --- !u!1 &294793957
 GameObject:
   m_ObjectHideFlags: 0
