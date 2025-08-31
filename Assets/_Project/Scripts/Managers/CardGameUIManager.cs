@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using redd096;
 using TMPro;
@@ -52,31 +51,8 @@ namespace cg
             SetBonus(false, null);
             ShowAdversaryCardsAndBonus(false);
             UpdateInfoLabel("");
-
-            //register events
-            yesButton.onClick.AddListener(OnClickYesPopup);
-            noButton.onClick.AddListener(OnClickNoPopup);
+            ShowPopup(false);
         }
-
-        private void ODestroy()
-        {
-            //unregister events
-            yesButton.onClick.RemoveListener(OnClickYesPopup);
-            noButton.onClick.RemoveListener(OnClickNoPopup);
-        }
-
-        #region events
-
-        private void OnClickYesPopup()
-        {
-            //TODO fare una funzione per accendere il popup e registrare 2 eventi per sì e no
-        }
-
-        private void OnClickNoPopup()
-        {
-        }
-
-        #endregion
 
         /// <summary>
         /// Show loading or game panel
@@ -212,6 +188,28 @@ namespace cg
         public void UpdateInfoLabel(string text)
         {
             infoLabel.text = text;
+        }
+
+        /// <summary>
+        /// Show or hide popup and register buttons events
+        /// </summary>
+        /// <param name="show"></param>
+        public void ShowPopup(bool show, System.Action onClickYes = null, System.Action onClickNo = null)
+        {
+            popupObj.SetActive(show);
+
+            yesButton.onClick.RemoveAllListeners();
+            yesButton.onClick.AddListener(() =>
+            {
+                onClickYes?.Invoke();
+                popupObj.SetActive(false);
+            });
+            noButton.onClick.RemoveAllListeners();
+            noButton.onClick.AddListener(() =>
+            {
+                onClickNo?.Invoke();
+                popupObj.SetActive(false);
+            });
         }
     }
 }

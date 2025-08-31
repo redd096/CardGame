@@ -8,12 +8,7 @@ namespace cg
     [System.Serializable]
     public class SwapHands : BaseCardBehaviour
     {
-        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return null;
-        }
-
-        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             yield return null;
         }

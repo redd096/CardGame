@@ -18,22 +18,12 @@ namespace cg
         protected BaseCard selectedCard;
         protected BaseCard selectedBonus;
 
-        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute(true);
-        }
-
-        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute(false);
-        }
-
         public override EGenericTarget GetGenericTargetCard()
         {
             return TargetCard.AsGenericTarget();
         }
 
-        protected IEnumerator Execute(bool isRealPlayer)
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             PlayerLogic currentPlayer = CardGameManager.instance.GetCurrentPlayer();
             int currentPlayerIndex = CardGameManager.instance.currentPlayer;
@@ -45,22 +35,30 @@ namespace cg
                     //if this is the player, wait for him to select a player
                     if (isRealPlayer)
                     {
-                        foreach (var keypair in CardGameUIManager.instance.playersInScene)
-                            keypair.Value.onClickSelect += OnSelectPlayer;
-
                         CardGameUIManager.instance.UpdateInfoLabel("Select one player to attack...");
-                        selectedPlayerIndex = -1;
 
                         while (true)
                         {
-                            int temp = selectedPlayerIndex;
-                            yield return new WaitUntil(() => selectedPlayerIndex != temp);
+                            foreach (var keypair in CardGameUIManager.instance.playersInScene)
+                                keypair.Value.onClickSelect += OnSelectPlayer;
+
+                            //wait user to select one target and show his cards
+                            selectedPlayerIndex = -1;
+                            yield return new WaitUntil(() => selectedPlayerIndex > -1);
                             ShowPlayerCards(selectedPlayerIndex);
-                            //TODO mostrare popup e se si preme no si nasconde il popup, se si preme si fa un break e si prosegue con la coroutine
-                        }
-                        
-                        foreach (var keypair in CardGameUIManager.instance.playersInScene)
-                            keypair.Value.onClickSelect -= OnSelectPlayer;
+
+                            foreach (var keypair in CardGameUIManager.instance.playersInScene)
+                                keypair.Value.onClickSelect -= OnSelectPlayer;
+
+                            //wait user to click on popup
+                            byte popupSelection = 0;
+                            CardGameUIManager.instance.ShowPopup(true, onClickYes: () => popupSelection = 1, onClickNo: () => popupSelection = 2);
+                            yield return new WaitUntil(() => popupSelection > 0);
+
+                            //if pressed yes, continue coroutine with selected target
+                            if (popupSelection == 1)
+                                break;
+                        }                        
                     }
                     //for adversary, just select one player random
                     else
@@ -123,7 +121,7 @@ namespace cg
         /// <summary>
         /// When a player is selected, attack its cards or bonus
         /// </summary>
-        protected IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int currentPlayerIndex, int attackedPlayerIndex)
+        protected virtual IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int currentPlayerIndex, int attackedPlayerIndex)
         {
             //update infos
             CardGameUIManager.instance.UpdateInfoLabel($"Player {currentPlayerIndex + 1} is attacking Player {attackedPlayerIndex + 1}");

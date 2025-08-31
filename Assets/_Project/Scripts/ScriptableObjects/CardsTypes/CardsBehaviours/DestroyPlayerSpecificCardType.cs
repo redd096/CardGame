@@ -17,8 +17,6 @@ namespace cg
         {
             // return base.SelectOneCardOrBonus(currentIsRealPlayer, attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer);
 
-            //TODO non dovrebbe far selezionare, ma dovrebbe automaticamente distruggere una carta di quel tipo all'avversario
-
             //be sure there are cards or bonus to select
             if (HasBonusOrCardsToSelect(attackedPlayer, out List<BaseCard> possibleBonus, out List<BaseCard> possibleCards))
             {
@@ -28,34 +26,13 @@ namespace cg
             }
 
             Dictionary<BaseCard, CardUI> attackedCards = attackedIsRealPlayer ? CardGameUIManager.instance.playerCardsInScene : CardGameUIManager.instance.adversaryCardsInScene;
-            Dictionary<BaseCard, BonusUI> attackedBonus = attackedIsRealPlayer ? CardGameUIManager.instance.playerBonusInScene : CardGameUIManager.instance.adversaryBonusInScene;
+            // Dictionary<BaseCard, BonusUI> attackedBonus = attackedIsRealPlayer ? CardGameUIManager.instance.playerBonusInScene : CardGameUIManager.instance.adversaryBonusInScene;
 
-            //if current is a player, wait for him to select card or bonus to attack
-            if (currentIsRealPlayer)
-            {
-                foreach (var keypair in attackedCards)
-                    keypair.Value.onClickSelect += OnSelectCardToDestroy;
-                foreach (var keypair in attackedBonus)
-                    keypair.Value.onClickSelect += OnSelectBonusToDestroy;
-
-                CardGameUIManager.instance.UpdateInfoLabel("Select one card or bonus to attack...");
-                selectedCard = null;
-                selectedBonus = null;
-                yield return new WaitUntil(() => selectedCard != null || selectedBonus != null);
-
-                foreach (var keypair in attackedCards)
-                    keypair.Value.onClickSelect -= OnSelectCardToDestroy;
-                foreach (var keypair in attackedBonus)
-                    keypair.Value.onClickSelect -= OnSelectBonusToDestroy;
-            }
-            //if adversary, just select one random bonus or card
+            //destroy random card also for real player. Can't choose cards because we can't see enemy cards
+            if (possibleBonus.Count > 0)
+                selectedBonus = possibleBonus[Random.Range(0, possibleBonus.Count)];
             else
-            {
-                if (possibleBonus.Count > 0)
-                    selectedBonus = possibleBonus[Random.Range(0, possibleBonus.Count)];
-                else
-                    selectedCard = possibleCards[Random.Range(0, possibleCards.Count)];
-            }
+                selectedCard = possibleCards[Random.Range(0, possibleCards.Count)];
 
             yield return AttackOneCardOrBonus(attackedPlayer, attackedPlayerIndex, attackedIsRealPlayer, attackedCards);
         }

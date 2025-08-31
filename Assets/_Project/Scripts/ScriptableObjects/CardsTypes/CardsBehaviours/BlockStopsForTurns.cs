@@ -14,17 +14,7 @@ namespace cg
         [Min(1)] public int NumberOfTurns = 1;
         [ShowAssetPreview] public Sprite bonusSprite;
 
-        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute(true, card);
-        }
-
-        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute(false, card);
-        }
-
-        private IEnumerator Execute(bool isRealPlayer, BaseCard card)
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             int playerIndex = CardGameManager.instance.currentPlayer;
             PlayerLogic player = CardGameManager.instance.GetCurrentPlayer();

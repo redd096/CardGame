@@ -20,17 +20,7 @@ namespace cg
             return true;
         }
 
-        public override IEnumerator PlayerExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute();
-        }
-
-        public override IEnumerator AdversaryExecute(BaseCard card, int behaviourIndex)
-        {
-            yield return Execute();
-        }
-
-        private IEnumerator Execute()
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             List<PlayerLogic> players = CardGameManager.instance.Players;
             int numberActivePlayers = players.FindAll(x => x.IsAlive()).Count;  //only active players

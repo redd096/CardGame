@@ -48,7 +48,7 @@ namespace cg
                     for (int j = 0; j < behaviours.Count; j++)
                     {
                         BaseCardBehaviour cardBehaviour = genericCard.CardsBehaviours[j];
-                        yield return cardBehaviour.PlayerExecute(genericCard, j);
+                        yield return cardBehaviour.Execute(isRealPlayer, genericCard, j);
                     }
                 }
             }
