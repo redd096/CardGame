@@ -15,8 +15,8 @@ namespace cg
 
         public ECardBehaviourSequenceType SequenceType;
 
-        public abstract IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex);
         public abstract EGenericTarget GetGenericTargetCard();
+        public abstract IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex);
 
         /// <summary>
         /// Execute on Draw instead of when player/adversary select it

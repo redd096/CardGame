@@ -13,14 +13,14 @@ namespace cg
         [Min(1)] public int NumberOfCards = 1;
         public ETargetCard TargetCard;
 
-        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
-        {
-            yield return null;
-        }
-
         public override EGenericTarget GetGenericTargetCard()
         {
             return TargetCard.AsGenericTarget();
+        }
+
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
+        {
+            yield return null;
         }
     }
 }

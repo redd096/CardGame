@@ -20,6 +20,11 @@ namespace cg
             return true;
         }
 
+        public override EGenericTarget GetGenericTargetCard()
+        {
+            return EGenericTarget.None;
+        }
+
         public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             List<PlayerLogic> players = CardGameManager.instance.Players;
@@ -107,11 +112,6 @@ namespace cg
                 CardGameUIManager.instance.UpdateInfoLabel($"Player {loserPlayerIndex + 1} is dead");
             }
             yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
-        }
-
-        public override EGenericTarget GetGenericTargetCard()
-        {
-            return EGenericTarget.None;
         }
     }
 }

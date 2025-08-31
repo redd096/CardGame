@@ -17,14 +17,14 @@ namespace cg
             + "(e.g. Look 2 cards and Steal 1 card, then the same to another player, and so on...)")]
         public ETargetCard TargetCard;
 
-        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
-        {
-            yield return null;
-        }
-
         public override EGenericTarget GetGenericTargetCard()
         {
             return TargetCard.AsGenericTarget();
+        }
+
+        public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
+        {
+            yield return null;
         }
 
         protected override bool MergeWithNextBehaviour(List<BaseCardBehaviour> cardBehaviours, int behaviourIndex, BaseCardBehaviour otherBehaviour)

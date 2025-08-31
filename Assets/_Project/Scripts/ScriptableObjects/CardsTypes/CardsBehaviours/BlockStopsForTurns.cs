@@ -14,6 +14,11 @@ namespace cg
         [Min(1)] public int NumberOfTurns = 1;
         [ShowAssetPreview] public Sprite bonusSprite;
 
+        public override EGenericTarget GetGenericTargetCard()
+        {
+            return EGenericTarget.Self;
+        }
+
         public override IEnumerator Execute(bool isRealPlayer, BaseCard card, int behaviourIndex)
         {
             int playerIndex = CardGameManager.instance.currentPlayer;
@@ -30,11 +35,6 @@ namespace cg
             int quantity = player.GetBonusQuantity(typeof(BlockStopsForTurns));
             CardGameUIManager.instance.UpdateInfoLabel($"Player {playerIndex + 1} added {NumberOfTurns} turns. Now will block the Stops for {quantity} turns");
             yield return new WaitForSeconds(DELAY_AFTER_BEHAVIOUR);
-        }
-
-        public override EGenericTarget GetGenericTargetCard()
-        {
-            return EGenericTarget.Self;
         }
 
         #region bonus
