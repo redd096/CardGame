@@ -4,19 +4,16 @@ using UnityEngine;
 
 namespace cg
 {
-    public class BehaviourSelectTargetHelper
+    public class BehaviourSelectTargetHelper : BaseBehaviourHelper
     {
         //public
         public List<int> selectedPlayers = new List<int>();
 
         //private
-        private BaseCardBehaviour behaviour;
-        private EGenericTarget target => behaviour.GetGenericTargetCard();
         private bool canSelectSelf => target == EGenericTarget.Self || target == EGenericTarget.EveryPlayer || target == EGenericTarget.EveryPlayerExceptPreviouslyChoosedOne;
 
-        public BehaviourSelectTargetHelper(BaseCardBehaviour behaviour)
+        public BehaviourSelectTargetHelper(BaseCardBehaviour behaviour) : base(behaviour)
         {
-            this.behaviour = behaviour;
         }
 
         /// <summary>
@@ -177,7 +174,7 @@ namespace cg
             bool attackedIsRealPlayer = CardGameManager.instance.IsRealPlayer(attackedPlayerIndex);
             CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
             CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
-            CardGameUIManager.instance.ShowAdversaryCardsAndBonus(true);
+            CardGameUIManager.instance.ShowAdversaryCardsAndBonus(attackedIsRealPlayer == false);
             CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
         }
 

@@ -106,7 +106,7 @@ namespace cg
         /// <summary>
         /// When a player is selected, attack its cards or bonus
         /// </summary>
-        protected virtual IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int currentPlayerIndex, int attackedPlayerIndex)
+        private IEnumerator AttackOnePlayer(bool currentIsRealPlayer, int currentPlayerIndex, int attackedPlayerIndex)
         {
             //update infos
             CardGameUIManager.instance.UpdateInfoLabel($"Player {currentPlayerIndex + 1} is attacking Player {attackedPlayerIndex + 1}");
