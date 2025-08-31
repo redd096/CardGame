@@ -9,9 +9,6 @@ namespace cg
         //public
         public List<int> selectedPlayers = new List<int>();
 
-        //private
-        private bool canSelectSelf => target == EGenericTarget.Self || target == EGenericTarget.EveryPlayer || target == EGenericTarget.EveryPlayerExceptPreviouslyChoosedOne;
-
         public BehaviourSelectTargetHelper(BaseCardBehaviour behaviour) : base(behaviour)
         {
         }
@@ -165,17 +162,6 @@ namespace cg
             if (checkSelf && playerToSelect.IsAlive())
                 return true;
             return false;
-        }
-
-        private void ShowPlayerCards(int attackedPlayerIndex)
-        {
-            //show selected player cards and bonus
-            PlayerLogic attackedPlayer = CardGameManager.instance.Players[attackedPlayerIndex];
-            bool attackedIsRealPlayer = CardGameManager.instance.IsRealPlayer(attackedPlayerIndex);
-            CardGameUIManager.instance.SetCards(attackedIsRealPlayer, attackedPlayer.CardsInHands.ToArray(), showFront: attackedIsRealPlayer);
-            CardGameUIManager.instance.SetBonus(attackedIsRealPlayer, attackedPlayer.ActiveBonus.ToArray());
-            CardGameUIManager.instance.ShowAdversaryCardsAndBonus(attackedIsRealPlayer == false);
-            CardGameUIManager.instance.UpdatePlayers(attackedPlayerIndex);
         }
 
         #endregion

@@ -5,6 +5,7 @@ namespace cg
     {
         protected BaseCardBehaviour behaviour;
         protected EGenericTarget target => behaviour.GetGenericTargetCard();
+        protected bool canSelectSelf => target == EGenericTarget.Self || target == EGenericTarget.EveryPlayer || target == EGenericTarget.EveryPlayerExceptPreviouslyChoosedOne;
 
         public BaseBehaviourHelper(BaseCardBehaviour behaviour)
         {
